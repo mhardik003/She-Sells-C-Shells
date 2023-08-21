@@ -1,14 +1,12 @@
-
-#include "utils.h"
 #include "headers.h"
 
-char USER_NAME[MAX_LEN];
-char SYSTEM_NAME[MAX_LEN];
-char INIT_PWD[MAX_LEN];
-int isWindowsBool;
-int isLinuxBool;
-
 void init_shell()
+{
+    clear();
+    strcpy(CURR_PWD, "~");
+}
+
+void exit_shell()
 {
     clear();
 }
@@ -16,29 +14,33 @@ void init_shell()
 int main()
 {
     // Keep accepting commands
-    find_os(&isLinuxBool, &isWindowsBool);
-    get_user_and_sys_name(USER_NAME, SYSTEM_NAME, INIT_PWD, isLinuxBool, isWindowsBool);
     init_shell();
+    find_os(&isLinuxBool, &isWindowsBool);
+    get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
+    get_pwd(INIT_PWD);
     while (1)
     {
 
         // Print appropriate prompt with username, systemname and directory before accepting input
-        print_prompt();
-        printf("Current working directory: %s\n", INIT_PWD);
-        
+        // printf("Current working directory: %s\n", INIT_PWD);
+        print_prompt(INIT_PWD);
+
         char input[4096];
         fgets(input, 4096, stdin);
-        
-        if (strcmp(input, "exit\n") == 0)
+        size_t len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
         {
-            printf("breaking the loop");
+            input[len - 1] = '\0';
+        }
+        if (strcmp(input, "exit") == 0)
+        {
+            printf("By!");
             break;
         }
 
         input_handler(input);
-        
-        
     }
-    
+    exit_shell();
+
     return 0;
 }

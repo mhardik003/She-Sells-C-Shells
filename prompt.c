@@ -36,7 +36,7 @@ void isWindows(int *is_Windows)
 #endif
 }
 
-void get_user_and_sys_name(char *user, char *system, char *pwd, int is_Linux, int is_Windows)
+void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows)
 {
     // function to find the user name and the system name from the current device
 
@@ -81,19 +81,44 @@ void get_user_and_sys_name(char *user, char *system, char *pwd, int is_Linux, in
         perror("gethostname");
         return;
     }
+}
 
-    // find the current working directory and store it in PWD
-    if (getcwd(pwd, sizeof(pwd)) == NULL)
+void get_pwd(char *pwd_name)
+{
+    // get the current working directory
+    if (getcwd(pwd_name, LEN_PWD) == NULL)
     {
-        
+        strcpy(CURR_PWD, pwd_name);
         perror("getcwd");
         return;
     }
-
-    // get the current working directory
+    else
+    {
+        // printf("Current working directory: %s\n", pwd_name);
+    }
 }
 
-void print_prompt()
+void print_pwd(char *pwd_name, char *INIT_PWD)
+{
+    if (strcmp(INIT_PWD, pwd_name) == 0)
+    {
+        printf("\033[1;34m~> ");
+        // printf("hihioih");/
+    }
+    else
+    {
+        int len_init_pwd = strlen(INIT_PWD);
+        printf("Initial directory  : %s", INIT_PWD);
+        printf("legnth of the initial directory : %d", len_init_pwd);
+        char *temp = (char *)malloc(sizeof(char) * MAX_LEN);
+        // remove the init_pwd part from pwd_name
+        strncpy(temp, pwd_name+len_init_pwd, MAX_LEN);
+        printf("\033[1;34m\\home\\%s> ", temp);
+        // printf("meow");
+    }
+}
+
+void print_prompt(char *INIT_PWD)
 {
 
     // printf("<%s@%s: %s>", USER_NAME, SYSTEM_NAME, PWD);
@@ -103,11 +128,16 @@ void print_prompt()
     char systemname[MAX_LEN];
     char pwd[MAX_LEN];
 
-    int isLinux = 0;
-    int isWindows = 0;
-    get_user_and_sys_name(username, systemname, pwd, isLinux, isWindows);
+    int isLinuxTemp = 0;
+    int isWindowsTemp = 0;
+    isLinux(&isLinuxTemp);
+    isWindows(&isWindowsTemp);
+    get_user_and_sys_name(username, systemname, isLinuxTemp, isWindowsTemp);
+    get_pwd(pwd);
     printf("\033[1;32m<%s", username);
     printf("\033[0m");
     printf("@%s: ", systemname);
-    printf("\033[1;34m%s> ", pwd);
+    print_pwd(pwd, INIT_PWD);
+    
+    printf("\033[0m");
 }

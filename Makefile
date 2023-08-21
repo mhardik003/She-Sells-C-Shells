@@ -1,2 +1,4 @@
 main:
-	gcc -g main.c prompt.c peek.c sys_commands.c proclore.c seek.c warp.c input_handler.c history.c
+	gcc -g global_vars.c main.c prompt.c input_handler.c function_handler.c functions/pastevents.c functions/peek.c functions/proclore.c functions/seek.c functions/sys_commands.c functions/warp.c
+
+
