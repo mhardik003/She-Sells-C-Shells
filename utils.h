@@ -37,9 +37,6 @@ void remove_first_element_from_array(char *args[], int num_args); // since the f
 int findWord(char *word, char *line);
 void trimString(char *str);
 
-// WARP
-void warp(char *args[], int num_args);
-
 
 // PASTEVENTS
 void pastevents();
@@ -51,7 +48,12 @@ void execute_pastevent(int command_number);
 void checkHistoryFile();
 
 
-
+// WARP
+void warp(char *args[], int num_args);
+char* checkSlashes( char *path);
+int isValidDirectory( char *path);
+char *get_prev_directory_string(char *path);
+void change_directory(char *path);
 
 
 

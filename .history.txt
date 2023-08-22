@@ -1,2 +1,15 @@
-cleae
+ls /boot
+ls /
 clear
+cd /
+ls
+ls -alh
+ls -al
+ls -al /
+ls /
+ls -a
+cd /
+ls -a
+ls -l
+cd kj
+ls kj

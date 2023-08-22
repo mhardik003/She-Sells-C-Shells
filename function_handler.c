@@ -19,45 +19,8 @@ void function_handler(char *function_name, char *args[], int num_args)
     }
     else if ((strcmp(function_name, "ls") == 0) || (strcmp(function_name, "peek") == 0))
     {
-        if (num_args == 0)
-            peek();
-        else if (num_args == 1)
-        {
-            if (strcmp(args[0], "-a") == 0)
-            {
-                peek_a();
-            }
-            else if (strcmp(args[0], "-l") == 0)
-            {
-                peek_l();
-            }
-            else if (strcmp(args[0], "-al") == 0 || strcmp(args[0], "-la") == 0)
-            {
-                peek_al();
-            }
-            else
-            {
-                printf("Wrong Flag\n");
-            }
-        }
-        else if (num_args == 2)
-        {
-            if (((strcmp(args[0], "-l") == 0) && (strcmp(args[1], "-a") == 0)) || ((strcmp(args[0], "-a") == 0) && (strcmp(args[1], "-l") == 0)))
-            {
-                peek();
-            }
-            else
-            {
-                printf("Wrongs flag");
-            }
-        }
-        else
-        {
-            if (num_args == 1)
-                printf("Wrong Flag");
-            else
-                printf("Wrong Flags\n");
-        }
+
+        peek(args, num_args);
     }
 
     else if (strcmp(function_name, "history") == 0 || strcmp(function_name, "pastevents") == 0)

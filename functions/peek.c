@@ -1,5 +1,46 @@
 #include "../headers.h"
 
+char *get_path(char *path)
+{
+
+    if (strcmp(path, ".") == 0)
+    {
+        // DO NOTHING
+        return CURR_PWD;
+    }
+    else if (strcmp(path, "..") == 0)
+    {
+        // Go to previous directory
+
+        return (isValidDirectory(get_prev_directory_string(CURR_PWD)) ? get_prev_directory_string(CURR_PWD) : "/");
+    }
+    else if (strcmp(path, "~") == 0)
+    {
+        // Go to home directory
+        return INIT_PWD;
+    }
+    else if (strcmp(path, "-") == 0)
+    {
+        // Go to previous directory
+        return PREV_PWD;
+    }
+    else if (path[0] == '/')
+    {
+
+        return path;
+    }
+    else
+    {
+        // Go to the specified directory
+        char *temp_dir = (char *)malloc(LEN_PWD * sizeof(char));
+        strcpy(temp_dir, CURR_PWD);
+        strcat(temp_dir, "/");
+        strcat(temp_dir, path);
+
+        return temp_dir;
+    }
+}
+
 // Comparator function for qsort
 int compare(const void *a, const void *b)
 {
@@ -28,7 +69,7 @@ void list_directory(const char *path, int show_all, int long_format)
     d = opendir(path);
     if (d == NULL)
     {
-        perror("Unable to read directory");
+        perror("ls : Unable to read directory");
         return;
     }
 
@@ -123,28 +164,42 @@ void list_directory(const char *path, int show_all, int long_format)
     }
 }
 
-void warp(int argc, char **argv)
+void peek(char *args[], int num_args)
 {
     int show_all = 0;
     int long_format = 0;
-    const char *path = ".";
+    char *path = (char *)malloc(1024 * sizeof(char));
+    strcpy(path, CURR_PWD);
 
-    for (int i = 1; i < argc; i++)
+    // print the arguments
+    // for (int i = 0; i < num_args; i++)
+    // {
+    //     printf("%s\n", args[i]);
+    // }
+
+    // printf("Number of args: %d\n", num_args);
+
+    for (int i = 0; i < num_args; i++)
     {
-        if (strcmp(argv[i], "-a") == 0)
+        // printf("i : %d", i);
+        if (args[i][0] != '-')
+        {
+            char *temp_path = (char *)malloc(1024 * sizeof(char));
+            strcpy(path, get_path(args[i]));
+        }
+        else if (strcmp(args[i], "-a") == 0)
         {
             show_all = 1;
         }
-        else if (strcmp(argv[i], "-l") == 0)
+        else if (strcmp(args[i], "-l") == 0)
         {
             long_format = 1;
         }
-        else
+        else if (strcmp(args[i], "-al") == 0 || strcmp(args[i], "-la") == 0)
         {
-            path = argv[i];
+            show_all = 1;
+            long_format = 1;
         }
     }
-
     list_directory(path, show_all, long_format);
-
 }
