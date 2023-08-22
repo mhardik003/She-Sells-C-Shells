@@ -177,6 +177,7 @@ void pastevents_purge()
 void execute_pastevent(int command_number)
 {
     checkHistoryFile();
+    // printf("hiiii");
 
     // printf("Executing the command number %d\n", command_number);
 
@@ -197,6 +198,8 @@ void execute_pastevent(int command_number)
             totalLines++;
         }
     }
+
+    printf("Total lines : %d\n", totalLines);
 
     // Validate the desired line number
     if (command_number <= 0 || command_number > totalLines)

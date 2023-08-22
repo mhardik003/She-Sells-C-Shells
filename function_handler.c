@@ -36,13 +36,17 @@ void function_handler(char *function_name, char *args[], int num_args)
             {
                 pastevents_purge();
             }
-            else if (atoi(args[0]) != 0)
+        }
+        else if (num_args == 2)
+        {
+            if (atoi(args[1]) != 0)
             {
-                execute_pastevent(atoi(args[0]));
+                execute_pastevent(atoi(args[1]));
             }
         }
     }
-    else if (strcmp(function_name, "pinfo") == 0 || strcmp(function_name, "proclore") == 0)
+
+    else if (strcmp(function_name, "ps") == 0 || strcmp(function_name, "proclore") == 0)
     {
         if (num_args == 0)
         {

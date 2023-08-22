@@ -1,15 +1,14 @@
-ls /boot
-ls /
 clear
-cd /
+proclore
+cd
 ls
-ls -alh
-ls -al
-ls -al /
-ls /
-ls -a
-cd /
-ls -a
-ls -l
-cd kj
-ls kj
+la
+ls
+clear
+ls
+clear
+hisotyr
+ls
+clear
+ls
+touch .gitignore

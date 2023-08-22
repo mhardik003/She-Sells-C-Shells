@@ -8,14 +8,16 @@ int findWord(char *word, char *line)
     char *tempcopy = (char *)malloc(strlen(line) * sizeof(char));
     strcpy(tempcopy, line);
     // Tokenize the line to check for the word
-    char *token = strtok(tempcopy, " ");
-    while (token != NULL) {
+    char *token = strtok(tempcopy, " ;&");
+    while (token != NULL)
+    {
         // printf("token: %s\n", token);
-        if (strcmp(token, word) == 0) {
-            
+        if (strcmp(token, word) == 0)
+        {
+
             return 0;
         }
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " ;&");
     }
 
     // printf("Word not found in the line.\n");
@@ -89,11 +91,14 @@ void single_input_handler(char *input, int bg)
     num_args--;
 
     // printf("function_name: %s\n", function_name);
-    // printf("num_args: %d\n The arguements are : \n", num_args);
+    // printf("num_args: %d\nThe arguements are : \n", num_args);
     // for (int i = 0; i < num_args; i++)
     // {
     //     printf("%s\n", args[i]);
     // }
+
+
+    
     function_handler(function_name, args, num_args);
 }
 
@@ -105,7 +110,8 @@ void input_handler(char *input)
     // The “;” command is used to give multiple commands at the same time. This works similar to how “;” works in Bash.
     // ‘&’ operator runs the command preceding it in the background after printing the process id of the newly created process.
     // Remove newline character from the line if present
-    if (input[strlen(input) - 1] == '\n') {
+    if (input[strlen(input) - 1] == '\n')
+    {
         input[strlen(input) - 1] = '\0';
     }
     char *lastCommand = read_lastLine();
@@ -126,6 +132,7 @@ void input_handler(char *input)
     char *token = strtok(input, ";");
     while (token)
     {
+        // printf("INDIVIDUAL COMMAND : %s\n", token);
         char *cmd = token;
         int background = 0;
 
