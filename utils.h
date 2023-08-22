@@ -38,15 +38,6 @@ int findWord(char *word, char *line);
 void trimString(char *str);
 
 
-// PASTEVENTS
-void pastevents();
-void addLineToHistory(char *input);
-char *read_lastLine();
-void pastevents();
-void pastevents_purge();
-void execute_pastevent(int command_number);
-void checkHistoryFile();
-
 
 // WARP
 void warp(char *args[], int num_args);
@@ -56,6 +47,22 @@ char *get_prev_directory_string(char *path);
 void change_directory(char *path);
 
 
+// PEEK
+char *get_path(char *path);
+int is_directory(const char *path);
+void list_directory(const char *path, int show_all, int long_format);
+void peek(char *args[], int num_args);
+
+
+
+// PASTEVENTS
+void pastevents();
+void addLineToHistory(char *input);
+char *read_lastLine();
+void pastevents();
+void pastevents_purge();
+void execute_pastevent(int command_number);
+void checkHistoryFile();
 
 
 
