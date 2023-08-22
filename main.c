@@ -3,7 +3,12 @@
 void init_shell()
 {
     clear();
-    strcpy(CURR_PWD, "~");
+    get_pwd(INIT_PWD);
+    get_pwd(CURR_PWD);
+    get_pwd(PREV_PWD);
+    
+    find_os(&isLinuxBool, &isWindowsBool);
+    get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
 
     // check if history file exists
     checkHistoryFile();
@@ -18,9 +23,6 @@ int main()
 {
     // Keep accepting commands
     init_shell();
-    find_os(&isLinuxBool, &isWindowsBool);
-    get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
-    get_pwd(INIT_PWD);
     while (1)
     {
 

@@ -179,7 +179,6 @@ void execute_pastevent(int command_number)
     checkHistoryFile();
 
     // printf("Executing the command number %d\n", command_number);
-    char filename[] = "sample.txt"; // Change this to the name of your fileint i;                          // Change this to the desired line number from the bottom
 
     FILE *file = fopen(HISTORY_FILE, "r");
     if (file == NULL)

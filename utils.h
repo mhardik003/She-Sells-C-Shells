@@ -17,8 +17,9 @@ void input_handler(char *input);
 
 void function_handler(char *function_name, char *args[], int num_args);
 
+
+
 // Function prototypes
-void warp(char *args[]);
 void peek();
 void peek_a();
 void peek_l();
@@ -27,7 +28,6 @@ void pastevents();
 void proclore_shell();
 void proclore(int pid);
 
-void addLineToHistory(char *input);
 
 
 // INPUT HANDLER
@@ -37,6 +37,8 @@ void remove_first_element_from_array(char *args[], int num_args); // since the f
 int findWord(char *word, char *line);
 void trimString(char *str);
 
+// WARP
+void warp(char *args[], int num_args);
 
 
 // PASTEVENTS

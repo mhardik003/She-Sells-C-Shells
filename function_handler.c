@@ -15,7 +15,7 @@ void function_handler(char *function_name, char *args[], int num_args)
     }
     else if ((strcmp(function_name, "cd") == 0) || (strcmp(function_name, "warp") == 0))
     {
-        warp(args);
+        warp(args, num_args);
     }
     else if ((strcmp(function_name, "ls") == 0) || (strcmp(function_name, "peek") == 0))
     {
@@ -44,7 +44,7 @@ void function_handler(char *function_name, char *args[], int num_args)
         {
             if (((strcmp(args[0], "-l") == 0) && (strcmp(args[1], "-a") == 0)) || ((strcmp(args[0], "-a") == 0) && (strcmp(args[1], "-l") == 0)))
             {
-                peek_al();
+                peek();
             }
             else
             {
