@@ -4,6 +4,9 @@ void init_shell()
 {
     clear();
     strcpy(CURR_PWD, "~");
+
+    // check if history file exists
+    checkHistoryFile();
 }
 
 void exit_shell()

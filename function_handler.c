@@ -31,7 +31,7 @@ void function_handler(char *function_name, char *args[], int num_args)
             {
                 peek_l();
             }
-            else if (strcmp(args[0], "-al") == 0 || strcmp(args[0],"-la" )==0)
+            else if (strcmp(args[0], "-al") == 0 || strcmp(args[0], "-la") == 0)
             {
                 peek_al();
             }
@@ -62,7 +62,22 @@ void function_handler(char *function_name, char *args[], int num_args)
 
     else if (strcmp(function_name, "history") == 0 || strcmp(function_name, "pastevents") == 0)
     {
-        pastevents();
+        if (num_args == 0)
+        {
+
+            pastevents();
+        }
+        else if (num_args == 1)
+        {
+            if (strcmp(args[0], "purge") == 0)
+            {
+                pastevents_purge();
+            }
+            else if (atoi(args[0]) != 0)
+            {
+                execute_pastevent(atoi(args[0]));
+            }
+        }
     }
     else if (strcmp(function_name, "pinfo") == 0 || strcmp(function_name, "proclore") == 0)
     {
@@ -74,7 +89,7 @@ void function_handler(char *function_name, char *args[], int num_args)
         if (num_args == 1)
         {
             int pid = atoi(args[0]);
-            if(pid == 0 )
+            if (pid == 0)
             {
                 printf("Enter a valid PID\n");
                 return;
@@ -85,6 +100,21 @@ void function_handler(char *function_name, char *args[], int num_args)
     else if (strcmp(function_name, "find") == 0 || strcmp(function_name, "seek") == 0)
     {
         printf("Find function\n");
+    }
+    else if (strcmp(function_name, "sleep") == 0)
+    {
+        if (num_args == 0)
+        {
+            printf("Enter a valid time\n");
+            return;
+        }
+        int time = atoi(args[0]);
+        if (time == 0)
+        {
+            printf("Enter a valid time\n");
+            return;
+        }
+        sleep(time);
     }
 
     else
