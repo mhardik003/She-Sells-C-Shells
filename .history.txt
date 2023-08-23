@@ -1,15 +1,15 @@
+nano ils.h
+nano utils.h
+vim utils.h
+exit
+vim utils.h
+nano utils.h
+echo "Lorem Ipsum"
+sleep 5 &     echo     "Lorem ipsum"
+nano utils.h
+hi
+exit
+hi
 ls
-cd
-ls
-proclore
-proclore 21090
-proclore
-proclore 21090
-proclore
-proclore 21090
-proclore
-proclore 21090\
-\proclore 27973
-proclore 27973
-proclore 21090
-proclore 27973
+clear
+exit

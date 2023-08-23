@@ -30,26 +30,6 @@ void find_os(int *is_Linux, int *is_Windows)
 #endif
 }
 
-void isLinux(int *is_Linux)
-{
-#ifdef __linux__
-    *is_Linux = 1;
-#else
-
-    *is_Linux = 0;
-#endif
-}
-
-void isWindows(int *is_Windows)
-{
-#ifdef _WIN32
-    *is_Windows = 1;
-#else
-
-    *is_Windows = 0;
-#endif
-}
-
 void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows)
 {
     // function to find the user name and the system name from the current device
@@ -130,24 +110,10 @@ void print_pwd()
 
 void print_prompt()
 {
-
-    // printf("<%s@%s: %s>", USER_NAME, SYSTEM_NAME, PWD);
-
     // add green colour to the USER_NAME
-    char username[MAX_LEN];
-    char systemname[MAX_LEN];
-    char pwd[MAX_LEN];
-
-    int isLinuxTemp = 0;
-    int isWindowsTemp = 0;
-    isLinux(&isLinuxTemp);
-    isWindows(&isWindowsTemp);
-    get_user_and_sys_name(username, systemname, isLinuxTemp, isWindowsTemp);
-    get_pwd(pwd);
-    printf("\033[1;32m<%s", username);
+    printf("\033[1;32m<%s", USER_NAME);
     printf("\033[0m");
-    printf("@%s: ", systemname);
+    printf("@%s: ", SYSTEM_NAME);
     print_pwd();
-
     printf("\033[0m");
 }

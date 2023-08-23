@@ -11,6 +11,10 @@
 
 void check_background_processes()
 {
+    /*
+    Checks for background processes which are yet to complete
+    */
+
     int status;
     pid_t pid;
 
@@ -29,10 +33,15 @@ void check_background_processes()
 
 int findWord(char *word, char *line)
 {
-    // break the line by spaces or tabs into tokens and check if one of the tokens is word
+    /*
+    Breaks the line by spaces or tabs into tokens and check if one of the tokens is word
+    */
+
+    // Specially created to check for the history command (if the command is history, don't add it to the history file)
 
     char *tempcopy = (char *)malloc(strlen(line) * sizeof(char));
     strcpy(tempcopy, line);
+
     // Tokenize the line to check for the word
     char *token = strtok(tempcopy, " ;&");
     while (token != NULL)
@@ -52,6 +61,10 @@ int findWord(char *word, char *line)
 
 void trimString(char *str)
 {
+    /*
+    Trims the string by removing leading and trailing spaces
+    */
+
     // Remove leading spaces
     while (isspace((unsigned char)*str))
     {
@@ -75,6 +88,12 @@ void trimString(char *str)
 void remove_first_element_from_array(char *args[], int num_args)
 {
 
+    /*
+    Removes the first element from the array
+    */
+
+    //  Being used to seperate the commands from their arguements
+
     for (int i = 0; i < num_args; i++)
     {
         args[i] = args[i + 1];
@@ -82,25 +101,79 @@ void remove_first_element_from_array(char *args[], int num_args)
     args[num_args] = "";
 }
 
-void single_input_handler(char *input, int is_background)
+
+// int runCommand(char* args[],int bg,int* fgTime){
+//     char path[64];
+//     int pid;
+//     sprintf(path,"/usr/bin/%s",args[0]);
+//     FILE* file = fopen(path,"r");
+//     if(file){ // Checking if the given command exists or not
+//         pid = fork();
+//         fclose(file);
+//     }else{
+//         printf("Error: Command Not Found\n");
+//         return 0;
+//     }
+//     if(pid < 0){
+//         perror("Error");
+//         return -1;
+//     }else if(!pid){
+//         setpgid(0,0);
+
+//         if(execvp(path,args) < 0){
+//             perror("Error");
+//             return -1;
+//         }
+//     }else{
+//         if(bg){
+//             printf("%s process started with pid: %d\n",args[0],pid);
+//             return pid;
+//         }else{
+//             int status;
+//             signal(SIGTTIN, SIG_IGN);
+//             signal(SIGTTOU, SIG_IGN);
+
+//             tcsetpgrp(0, pid);
+
+//             clock_t t;
+//             t = time(NULL);
+
+//             waitpid(pid, &status, WUNTRACED);
+
+//             t = time(NULL) - t;
+//             *fgTime = t;
+
+//             tcsetpgrp(0, getpgid(0));
+
+//             signal(SIGTTIN, SIG_DFL);
+//             signal(SIGTTOU, SIG_DFL);
+
+//             if (WIFSTOPPED(status)) return pid; // Ctrl+Z
+
+//             if (WEXITSTATUS(status) == EXIT_FAILURE) return -1;            
+//         }
+//     }
+// }
+
+void execute_command(char *input, int is_background)
 {
-    char *token;
-    char *saveptr;
-    char *command;
-    char *args[100];
+
+    /*
+        Recieves the command from the input handler and executes it
+    */
+
+    char *token;     // to store the tokens of the input one by one
+    char *saveptr;   // to store the pointer to the next token for the strtok function
+    char *args[100]; // to store the arguements of the command
+
     int length_input = strlen(input);
 
-    char *temp = (char *)malloc(length_input * sizeof(char));
+    char *temp = (char *)malloc(length_input * sizeof(char)); // to store the input temporarily
     strcpy(temp, input);
 
     // getting all the arguements for the command
     int num_args = 0;
     token = strtok_r(temp, " ", &saveptr);
-
-    // trim the sides of the token
-    // token = trim(token);
-    // printf("token: %s\n", token);
-
     while (token)
     {
         args[num_args] = token;
@@ -109,48 +182,45 @@ void single_input_handler(char *input, int is_background)
         token = strtok_r(NULL, " ", &saveptr);
     }
     args[num_args] = NULL;
-    // printf("Single output : %s\n", args[0]);
+
     // printf("num_args: %d\n", num_args);
 
     char *function_name = args[0];
-    remove_first_element_from_array(args, num_args);
-    num_args--;
-
     // printf("function_name: %s\n", function_name);
-    // printf("num_args: %d\nThe arguements are : \n", num_args);
-    // for (int i = 0; i < num_args; i++)
-    // {
-    //     printf("%s\n", args[i]);
-    // }
-    pid_t pid = fork();
-    if (pid == 0)
-    { // Child process
-        execvp(args[0], args);
-        exit(0);
-    }
-    else
-    { // Parent process
-        if (is_background)
-        {
-            printf("%d\n", pid);
-        }
-        else
-        {
-            time_t start_time = time(NULL);
-            waitpid(pid, NULL, 0);
-            time_t end_time = time(NULL);
-            time_t duration = end_time - start_time;
 
-            if (duration > 2)
-            {
-                printf("THE PREVIOUS COMMAND TOOK MORE THAN 2 SECONDS\n");
-            }
-            else
-            {
-                printf("PREVIOUS COMMAND TOOK LESSER THAN 2 SECONDS\n");
-            }
-        }
-    }
+    remove_first_element_from_array(args, num_args); // so that args only has the arguements and not the function name
+    num_args--;                                      // since we removed the first element from the array
+
+    // pid_t pid = fork();
+    // if (pid == 0)
+    // { // Child process
+    //     execvp(args[0], args);
+    //     exit(0);
+    // }
+    // else
+    // { // Parent process
+    //     if (is_background)
+    //     {
+    //         printf("Hiiii\n");
+    //     }
+    //     else
+    //     {
+    //         time_t start_time = time(NULL);
+    //         waitpid(pid, NULL, 0);
+    //         time_t end_time = time(NULL);
+    //         time_t duration = end_time - start_time;
+
+    //         // if (duration > 2)
+    //         // {
+    //         //     printf("THE PREVIOUS COMMAND TOOK MORE THAN 2 SECONDS\n");
+    //         // }
+    //         // else
+    //         // {
+    //         //     printf("PREVIOUS COMMAND TOOK LESSER THAN 2 SECONDS\n");
+    //         // }
+    //     }
+    // }
+
     function_handler(function_name, args, num_args);
 }
 
@@ -195,7 +265,7 @@ void input_handler(char *input)
             cmd[strlen(cmd) - 1] = '\0'; // remove the '&' from the command
         }
 
-        single_input_handler(cmd, background);
+        execute_command(cmd, background);
 
         token = strtok(NULL, ";");
     }

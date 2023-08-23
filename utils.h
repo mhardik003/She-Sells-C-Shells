@@ -32,7 +32,7 @@ void pastevents();
 
 // INPUT HANDLER
 void input_handler(char *input);
-void single_input_handler(char *input, int bg);
+void execute_command(char *input, int bg);
 void remove_first_element_from_array(char *args[], int num_args); // since the first word in the command is the function itslef but we just want the arguements in the args array
 int findWord(char *word, char *line);
 void trimString(char *str);
@@ -75,8 +75,6 @@ void proclore(int num_args, char *argv[]);
 void seek(int num_args, char *args[]);
 
 
-// ECHO
-void echo(int num_args , char *args[] );
 
 
 

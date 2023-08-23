@@ -22,7 +22,6 @@ void function_handler(char *function_name, char *args[], int num_args)
 
         peek(args, num_args);
     }
-
     else if (strcmp(function_name, "history") == 0 || strcmp(function_name, "pastevents") == 0)
     {
         if (num_args == 0)
@@ -45,42 +44,43 @@ void function_handler(char *function_name, char *args[], int num_args)
             }
         }
     }
-
     else if (strcmp(function_name, "ps") == 0 || strcmp(function_name, "proclore") == 0)
     {
         proclore(num_args, args);
     }
     else if (strcmp(function_name, "find") == 0 || strcmp(function_name, "seek") == 0)
     {
-        seek (num_args, args);
+        seek(num_args, args);
     }
-    else if (strcmp(function_name, "sleep") == 0)
-    {
-        if (num_args == 0)
-        {
-            printf("Enter a valid time\n");
-            return;
-        }
-        int time = atoi(args[0]);
-        if (time == 0)
-        {
-            printf("Enter a valid time\n");
-            return;
-        }
-        sleep(time);
-    }
-    else if(strcmp(function_name, "pwd")==0)
+    else if (strcmp(function_name, "pwd") == 0)
     {
         printf("%s\n", CURR_PWD);
     }
-
-    else if (strcmp(function_name, "echo")==0)
+    else if (strcmp(function_name, "exit") == 0 || strcmp(function_name, "quit") == 0)
     {
-        echo(num_args, args);
+        exit_call_bool = 1;
     }
-
     else
     {
-        printf("ERROR : '%s' is not a valid command\n", function_name);
+        // Add the command to args[0] and shift all the other elements to the right
+        for (int i = num_args; i > 0; i--)
+        {
+            args[i] = args[i - 1];
+        }
+        args[0] = function_name;
+
+
+        for(int i=0; i<num_args+1; i++)
+        {
+            printf("%s\n", args[i]);
+        }
+        
+        setpgid(0,0);
+
+        // args contains both the command and the arguements
+        if (execvp(args[0], args) == -1)
+        {
+            printf("ERROR : '%s' is not a valid command\n", function_name);
+        }
     }
 }
