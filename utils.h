@@ -12,6 +12,7 @@ void isWindows(int *is_Windows);
 void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows);
 void get_pwd(char *pwd);
 void print_prompt();
+void check_background_processes();
 
 void input_handler(char *input);
 
@@ -25,8 +26,7 @@ void peek_a();
 void peek_l();
 void peek_al();
 void pastevents();
-void proclore_shell();
-void proclore(int pid);
+
 
 
 
@@ -63,6 +63,14 @@ void pastevents();
 void pastevents_purge();
 void execute_pastevent(int command_number);
 void checkHistoryFile();
+
+
+// PROCLORE
+void proclore(int num_args, char *argv[]);
+
+
+// SEEK
+void seek(int num_args, char *args[]);
 
 
 

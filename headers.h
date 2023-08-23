@@ -8,7 +8,10 @@
 #define LEN_PWD 1024
 #define MAX_HISTORY_LENGTH 15
 
+
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "stdio.h"
 #include "string.h"
 #include "unistd.h"

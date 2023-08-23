@@ -1,14 +1,15 @@
-clear
-proclore
-cd
+warp test
+warp 1
+warp test_dir
+warp 1
+warp ~
+warp .. test_dir
 ls
-la
+cd Projects
 ls
-clear
+cd mini-project-1-mhardik003
 ls
-clear
-hisotyr
+warp ~
 ls
-clear
+warp ..
 ls
-touch .gitignore

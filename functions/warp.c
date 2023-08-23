@@ -100,6 +100,11 @@ void change_directory(char *path)
     else
     {
         // Go to the specified directory
+        if(path[0]=='.' && path[1]=='/')
+        {
+            path = path+2;
+        }
+
         char *temp_dir = (char *)malloc(LEN_PWD * sizeof(char));
         strcpy(temp_dir, CURR_PWD);
         strcat(temp_dir, "/");

@@ -1,6 +1,24 @@
 #include "utils.h"
 #include "headers.h"
 
+void check_background_processes()
+{
+    int status;
+    pid_t pid;
+
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
+    {
+        if (WIFEXITED(status))
+        {
+            printf("%s exited normally (%d)\n", "Command", pid);
+        }
+        else
+        {
+            printf("%s exited abnormally (%d)\n", "Command", pid);
+        }
+    }
+}
+
 int findWord(char *word, char *line)
 {
     // break the line by spaces or tabs into tokens and check if one of the tokens is word
@@ -56,7 +74,7 @@ void remove_first_element_from_array(char *args[], int num_args)
     args[num_args] = "";
 }
 
-void single_input_handler(char *input, int bg)
+void single_input_handler(char *input, int is_background)
 {
     char *token;
     char *saveptr;
@@ -96,9 +114,35 @@ void single_input_handler(char *input, int bg)
     // {
     //     printf("%s\n", args[i]);
     // }
+    pid_t pid = fork();
+    if (pid == 0)
+    { // Child process
+        execvp(args[0], args);
+        exit(0);
+    }
+    else
+    { // Parent process
+        if (is_background)
+        {
+            printf("%d\n", pid);
+        }
+        else
+        {
+            time_t start_time = time(NULL);
+            waitpid(pid, NULL, 0);
+            time_t end_time = time(NULL);
+            time_t duration = end_time - start_time;
 
-
-    
+            if (duration > 2)
+            {
+                printf("THE PREVIOUS COMMAND TOOK MORE THAN 2 SECONDS\n");
+            }
+            else
+            {
+                printf("PREVIOUS COMMAND TOOK LESSER THAN 2 SECONDS\n");
+            }
+        }
+    }
     function_handler(function_name, args, num_args);
 }
 

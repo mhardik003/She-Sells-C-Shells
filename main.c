@@ -6,7 +6,7 @@ void init_shell()
     get_pwd(INIT_PWD);
     get_pwd(CURR_PWD);
     get_pwd(PREV_PWD);
-    
+
     find_os(&isLinuxBool, &isWindowsBool);
     get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
 
@@ -44,6 +44,7 @@ int main()
         }
 
         input_handler(input);
+        check_background_processes();
     }
     exit_shell();
 

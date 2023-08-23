@@ -48,25 +48,11 @@ void function_handler(char *function_name, char *args[], int num_args)
 
     else if (strcmp(function_name, "ps") == 0 || strcmp(function_name, "proclore") == 0)
     {
-        if (num_args == 0)
-        {
-            proclore_shell();
-        }
-
-        if (num_args == 1)
-        {
-            int pid = atoi(args[0]);
-            if (pid == 0)
-            {
-                printf("Enter a valid PID\n");
-                return;
-            }
-            proclore(pid);
-        }
+        proclore(num_args, args);
     }
     else if (strcmp(function_name, "find") == 0 || strcmp(function_name, "seek") == 0)
     {
-        printf("Find function\n");
+        seek (num_args, args);
     }
     else if (strcmp(function_name, "sleep") == 0)
     {
