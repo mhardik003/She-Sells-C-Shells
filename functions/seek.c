@@ -128,11 +128,7 @@ void seek(int num_args, char *args[])
 
         if (S_ISDIR(st.st_mode))
         {
-            char *directory_args[1];
-            directory_args[0] = (char *)malloc(1024 * sizeof(char));
-
-            strcpy(directory_args[0], exactMatch);
-            warp(directory_args, 1);
+            change_directory(exactMatch);
 
             // if (warp(directory_args, 1))
             // {

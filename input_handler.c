@@ -1,6 +1,14 @@
 #include "utils.h"
 #include "headers.h"
 
+// void handler() {
+//     if (!fgRun) {
+//         printf("\n");
+//         prompt(user,hostname,cwd,root,fgTime);
+//     }
+//     fgRun = 0;
+// }
+
 void check_background_processes()
 {
     int status;

@@ -1,14 +1,14 @@
 #include "../headers.h"
 
-char* checkSlashes( char *path)
+char *checkSlashes(char *path)
 {
     int len = strlen(path);
-    int temp_loc=0;
+    int temp_loc = 0;
     for (int i = 0; i < len; i++)
     {
         if (path[i] == '/')
         {
-            temp_loc=i;
+            temp_loc = i;
         }
         else
         {
@@ -18,14 +18,14 @@ char* checkSlashes( char *path)
 
     // printf("Number of forward slashes : %d", temp_loc);
     char *temp = (char *)malloc(LEN_PWD * sizeof(char));
-    strncpy(temp,path+temp_loc,1024);
+    strncpy(temp, path + temp_loc, 1024);
     // printf("temp : %s\n",temp);
     return temp;
 }
 
-int isValidDirectory( char *path)
+int isValidDirectory(char *path)
 {
-    strcpy(path,checkSlashes(path));
+    strcpy(path, checkSlashes(path));
     struct stat path_stat;
     stat(path, &path_stat);
     return S_ISDIR(path_stat.st_mode);
@@ -39,6 +39,7 @@ char *get_prev_directory_string(char *path)
     {
         if (strcmp(path, "/") != 0)
         {
+            // printf("last slash : '%s'\n", last_slash);
             *last_slash = '\0';
         }
     }
@@ -55,23 +56,33 @@ void change_directory(char *path)
     {
         // DO NOTHING
         printf("%s\n", CURR_PWD);
-
     }
     else if (strcmp(path, "..") == 0)
     {
         // Go to previous directory
         strcpy(PREV_PWD, CURR_PWD);
-        strcpy(CURR_PWD, isValidDirectory(get_prev_directory_string(CURR_PWD)) ? get_prev_directory_string(CURR_PWD) : "/");
+        strcpy(CURR_PWD, isValidDirectory(get_prev_directory_string(CURR_PWD)) ? CURR_PWD : "/");
         printf("%s\n", CURR_PWD);
-
     }
-    else if (strcmp(path, "~") == 0)
+    else if (path[0] == '~')
     {
-        // Go to home directory
-        strcpy(PREV_PWD, CURR_PWD);
-        strcpy(CURR_PWD, INIT_PWD);
-        printf("%s\n", CURR_PWD);
-
+        if (path[1] == '/')
+        {
+            path = path + 2;
+            change_directory(path);
+        }
+        else if (strcmp(path, "~") == 0)
+        {
+            // Go to home directory
+            strcpy(PREV_PWD, CURR_PWD);
+            strcpy(CURR_PWD, INIT_PWD);
+            printf("%s\n", CURR_PWD);
+        }
+        else
+        {
+            printf("warp: The directory “%s” does not exist\n", path);
+            return;
+        }
     }
     else if (strcmp(path, "-") == 0)
     {
@@ -81,7 +92,6 @@ void change_directory(char *path)
         strcpy(CURR_PWD, PREV_PWD);
         strcpy(PREV_PWD, temp);
         printf("%s\n", CURR_PWD);
-
     }
     else if (path[0] == '/')
     {
@@ -100,9 +110,9 @@ void change_directory(char *path)
     else
     {
         // Go to the specified directory
-        if(path[0]=='.' && path[1]=='/')
+        if (path[0] == '.' && path[1] == '/')
         {
-            path = path+2;
+            path = path + 2;
         }
 
         char *temp_dir = (char *)malloc(LEN_PWD * sizeof(char));

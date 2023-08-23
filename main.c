@@ -22,13 +22,16 @@ void exit_shell()
 int main()
 {
     // Keep accepting commands
+    
+    // signal(SIGINT, handler);
+    
     init_shell();
     while (1)
     {
 
         // Print appropriate prompt with username, systemname and directory before accepting input
         // printf("Current working directory: %s\n", INIT_PWD);
-        print_prompt(INIT_PWD);
+        print_prompt();
 
         char input[4096];
         fgets(input, 4096, stdin);

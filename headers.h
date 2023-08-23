@@ -17,6 +17,7 @@
 #include "unistd.h"
 #include "stdlib.h"
 #include <ctype.h>
+#include <signal.h>
 
 #include <dirent.h> // for ls -al
 #include <time.h>

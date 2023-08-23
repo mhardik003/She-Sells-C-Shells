@@ -69,6 +69,15 @@ void function_handler(char *function_name, char *args[], int num_args)
         }
         sleep(time);
     }
+    else if(strcmp(function_name, "pwd")==0)
+    {
+        printf("%s\n", CURR_PWD);
+    }
+
+    else if (strcmp(function_name, "echo")==0)
+    {
+        echo(num_args, args);
+    }
 
     else
     {

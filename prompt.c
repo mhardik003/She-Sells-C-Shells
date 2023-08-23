@@ -128,7 +128,7 @@ void print_pwd()
     }
 }
 
-void print_prompt(char *INIT_PWD)
+void print_prompt()
 {
 
     // printf("<%s@%s: %s>", USER_NAME, SYSTEM_NAME, PWD);
