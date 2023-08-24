@@ -24,6 +24,5 @@
 #include <pwd.h>
 #include <grp.h>
 
-#define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
 
 #endif

@@ -2,11 +2,14 @@
 
 void init_shell()
 {
+    /*
+        Function to initialize the shell
+    */
     clear();
     get_pwd(INIT_PWD);
     get_pwd(CURR_PWD);
     get_pwd(PREV_PWD);
-    exit_call_bool=0;
+    exit_call_bool = 0;
     find_os(&isLinuxBool, &isWindowsBool);
     get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
 
@@ -16,23 +19,39 @@ void init_shell()
 
 void exit_shell()
 {
+    /*
+        Function to exit the shell
+    */
+
     clear();
+}
+
+void handler(int sig)
+{
+    /*
+        Function to handle the SIGINT (Ctrl+C) signal
+    */
+    if (sig == SIGINT)
+    {
+        printf("\n");
+        print_prompt();
+        fflush(stdout);
+    }
 }
 
 int main()
 {
+    /*
+        Main function
+    */
 
-    // signal(SIGINT, handler);
+    signal(SIGINT, handler);
     // signal(SIGTSTP, handler);
     // signal(SIGCHLD, bg_end_handler);
 
     init_shell();
     while (1)
     {
-
-        // Print appropriate prompt with username, systemname and directory before accepting input
-        // printf("Current working directory: %s\n", INIT_PWD);
-
         // prints the prompt
         print_prompt();
 
@@ -47,6 +66,13 @@ int main()
             input[len - 1] = '\0';
         }
 
+        /*
+        check for background processes which are yet to complete
+        if they are complete, then remove them from the bg_procs array
+        and print the message that the process has ended
+        */
+        check_bg_processes();
+
         // handle the input
         input_handler(input);
 
@@ -56,9 +82,6 @@ int main()
             printf("By!");
             break;
         }
-
-        // check for background processes which are yet to complete
-        check_background_processes();
     }
     exit_shell();
 

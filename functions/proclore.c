@@ -110,7 +110,7 @@ void print_Process_info(int pid)
     printf("Executable Path: %s\n", buf);
 }
 
-void proclore(int argc, char *argv[])
+void proclore_driver(int argc, char *argv[])
 {
     pid_t pid;
 

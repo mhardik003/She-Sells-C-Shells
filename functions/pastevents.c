@@ -25,91 +25,6 @@ void checkHistoryFile()
     }
 }
 
-void addLineToHistory(char *input)
-{
-    checkHistoryFile();
-    // count the number of lines in the .history.txt file
-    // if the number of lines is greater than MAX_HISTORY_LEN, delete the first line
-    int num_lines = 0;
-    char *fileName = HISTORY_FILE;
-    char tempFileName[] = "temp_file.txt";
-
-    FILE *file = fopen(fileName, "r");
-    if (file == NULL)
-    {
-        perror("Error opening input file");
-        return;
-    }
-
-    // Count the number of lines in the input file
-    int ch;
-    while ((ch = fgetc(file)) != EOF)
-    {
-        if (ch == '\n')
-        {
-            num_lines++;
-        }
-    }
-    // Count the last line if it doesn't end with a newline
-    if (ftell(file) > 0)
-    {
-        num_lines++;
-    }
-
-    // Close the input file
-    fclose(file);
-
-    // printf("Number of lines in the file : %d \n", num_lines);
-    // If line count is greater than maxLines, remove the first line
-    if (num_lines > MAX_HISTORY_LENGTH)
-    {
-        file = fopen(fileName, "r");
-        FILE *tempFile = fopen(tempFileName, "w");
-
-        if (file == NULL || tempFile == NULL)
-        {
-            perror("Error opening files");
-            return;
-        }
-
-        // Skip the first line in the input file
-        int firstLineSkipped = 0;
-        while ((ch = fgetc(file)) != EOF)
-        {
-            if (!firstLineSkipped)
-            {
-                if (ch == '\n')
-                {
-                    firstLineSkipped = 1;
-                }
-            }
-            else
-            {
-                fputc(ch, tempFile);
-            }
-        }
-
-        fclose(file);
-        fclose(tempFile);
-
-        // Replace the original file with the temporary file
-        remove(fileName);
-        rename(tempFileName, fileName);
-
-        // printf("First line removed.\n");
-    }
-    else
-    {
-        // printf("No changes needed.\n");
-    }
-
-    // append the input to the .history.txt file
-    FILE *fp;
-    fp = fopen(HISTORY_FILE, "a");
-    fprintf(fp, "%s\n", input);
-    fclose(fp);
-}
-
 char *read_lastLine()
 {
     checkHistoryFile();
@@ -136,42 +51,101 @@ char *read_lastLine()
     return last_line;
 }
 
-void pastevents()
+void addCommandToHistory(char *input)
 {
-    checkHistoryFile();
 
-    // read the contents of the .history.txt file and print them on the screen
-    char fileName[] = HISTORY_FILE;
-    char buffer[256]; // Buffer to store each line
+    char *lastCommand = read_lastLine();
 
-    // Open the file for reading
-    FILE *file;
-    file = fopen(fileName, "r");
-    if (file == NULL)
+    lastCommand[strlen(lastCommand) - 1] = '\0';
+
+    // If the last command is the same as the current command, don't add it to the history file
+    // If the command is history or pastevents, don't add it to the history file
+    if (strcmp(lastCommand, input) != 0 && (findWord("history", input) && (findWord("pastevents", input))))
     {
-        perror("Error opening file");
-        return;
+
+        checkHistoryFile();
+        // count the number of lines in the .history.txt file
+        // if the number of lines is greater than MAX_HISTORY_LEN, delete the first line
+
+        int num_lines = 0;
+        char *fileName = HISTORY_FILE;
+        char tempFileName[] = "temp_file.txt";
+
+        FILE *file = fopen(fileName, "r");
+        if (file == NULL)
+        {
+            perror("Error opening input file");
+            return;
+        }
+
+        // Count the number of lines in the input file
+        int ch;
+        while ((ch = fgetc(file)) != EOF)
+        {
+            if (ch == '\n')
+            {
+                num_lines++;
+            }
+        }
+        // Count the last line if it doesn't end with a newline
+        if (ftell(file) > 0)
+        {
+            num_lines++;
+        }
+
+        // Close the input file
+        fclose(file);
+
+        // printf("Number of lines in the file : %d \n", num_lines);
+        // If line count is greater than maxLines, remove the first line
+        if (num_lines > MAX_HISTORY_LENGTH)
+        {
+            file = fopen(fileName, "r");
+            FILE *tempFile = fopen(tempFileName, "w");
+
+            if (file == NULL || tempFile == NULL)
+            {
+                perror("Error opening files");
+                return;
+            }
+
+            // Skip the first line in the input file
+            int firstLineSkipped = 0;
+            while ((ch = fgetc(file)) != EOF)
+            {
+                if (!firstLineSkipped)
+                {
+                    if (ch == '\n')
+                    {
+                        firstLineSkipped = 1;
+                    }
+                }
+                else
+                {
+                    fputc(ch, tempFile);
+                }
+            }
+
+            fclose(file);
+            fclose(tempFile);
+
+            // Replace the original file with the temporary file
+            remove(fileName);
+            rename(tempFileName, fileName);
+
+            // printf("First line removed.\n");
+        }
+        else
+        {
+            // printf("No changes needed.\n");
+        }
+
+        // append the input to the .history.txt file
+        FILE *fp;
+        fp = fopen(HISTORY_FILE, "a");
+        fprintf(fp, "%s\n", input);
+        fclose(fp);
     }
-
-    // Read and print each line from the file
-    while (fgets(buffer, sizeof(buffer), file))
-    {
-        printf("%s", buffer);
-    }
-
-    // Close the file
-    fclose(file);
-    return;
-}
-
-void pastevents_purge()
-{
-    checkHistoryFile();
-
-    // delete the contents of the .history.txt file
-    // printf("Clearing the history\n");
-    FILE *fp = fopen(HISTORY_FILE, "w");
-    fclose(fp);
 }
 
 void execute_pastevent(int command_number)
@@ -185,7 +159,7 @@ void execute_pastevent(int command_number)
     if (file == NULL)
     {
         perror("Error opening file");
-        return ;
+        return;
     }
 
     // Count the total number of lines in the file
@@ -227,4 +201,72 @@ void execute_pastevent(int command_number)
     }
 
     fclose(file);
+}
+
+void pastevents_purge()
+{
+    checkHistoryFile();
+
+    // delete the contents of the .history.txt file
+    // printf("Clearing the history\n");
+    FILE *fp = fopen(HISTORY_FILE, "w");
+    fclose(fp);
+}
+
+void pastevents()
+{
+    checkHistoryFile();
+
+    // read the contents of the .history.txt file and print them on the screen
+    char fileName[] = HISTORY_FILE;
+    char buffer[256]; // Buffer to store each line
+
+    // Open the file for reading
+    FILE *file;
+    file = fopen(fileName, "r");
+    if (file == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+
+    // Read and print each line from the file
+    while (fgets(buffer, sizeof(buffer), file))
+    {
+        printf("%s", buffer);
+    }
+
+    // Close the file
+    fclose(file);
+    return;
+}
+
+void pastevents_driver(int arg_count, char *args[])
+{
+    if (arg_count == 0)
+    {
+        pastevents();
+    }
+    else if (arg_count == 1)
+    {
+        if (strcmp(args[0], "purge") == 0)
+        {
+            pastevents_purge();
+        }
+        else
+        {
+            printf("ERROR : Invalid argument\n");
+        }
+    }
+    else if (arg_count == 2)
+    {
+        if (atoi(args[1]) != 0)
+        {
+            execute_pastevent(atoi(args[1]));
+        }
+        else
+        {
+            printf("ERROR : Invalid PID\n");
+        }
+    }
 }

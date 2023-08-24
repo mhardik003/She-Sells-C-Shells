@@ -1,36 +1,6 @@
 #include "utils.h"
 #include "headers.h"
 
-// void handler() {
-//     if (!fgRun) {
-//         printf("\n");
-//         prompt(user,hostname,cwd,root,fgTime);
-//     }
-//     fgRun = 0;
-// }
-
-void check_background_processes()
-{
-    /*
-    Checks for background processes which are yet to complete
-    */
-
-    int status;
-    pid_t pid;
-
-    while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
-    {
-        if (WIFEXITED(status))
-        {
-            printf("%s exited normally (%d)\n", "Command", pid);
-        }
-        else
-        {
-            printf("%s exited abnormally (%d)\n", "Command", pid);
-        }
-    }
-}
-
 int findWord(char *word, char *line)
 {
     /*
@@ -101,63 +71,8 @@ void remove_first_element_from_array(char *args[], int num_args)
     args[num_args] = "";
 }
 
-
-// int runCommand(char* args[],int bg,int* fgTime){
-//     char path[64];
-//     int pid;
-//     sprintf(path,"/usr/bin/%s",args[0]);
-//     FILE* file = fopen(path,"r");
-//     if(file){ // Checking if the given command exists or not
-//         pid = fork();
-//         fclose(file);
-//     }else{
-//         printf("Error: Command Not Found\n");
-//         return 0;
-//     }
-//     if(pid < 0){
-//         perror("Error");
-//         return -1;
-//     }else if(!pid){
-//         setpgid(0,0);
-
-//         if(execvp(path,args) < 0){
-//             perror("Error");
-//             return -1;
-//         }
-//     }else{
-//         if(bg){
-//             printf("%s process started with pid: %d\n",args[0],pid);
-//             return pid;
-//         }else{
-//             int status;
-//             signal(SIGTTIN, SIG_IGN);
-//             signal(SIGTTOU, SIG_IGN);
-
-//             tcsetpgrp(0, pid);
-
-//             clock_t t;
-//             t = time(NULL);
-
-//             waitpid(pid, &status, WUNTRACED);
-
-//             t = time(NULL) - t;
-//             *fgTime = t;
-
-//             tcsetpgrp(0, getpgid(0));
-
-//             signal(SIGTTIN, SIG_DFL);
-//             signal(SIGTTOU, SIG_DFL);
-
-//             if (WIFSTOPPED(status)) return pid; // Ctrl+Z
-
-//             if (WEXITSTATUS(status) == EXIT_FAILURE) return -1;            
-//         }
-//     }
-// }
-
 void execute_command(char *input, int is_background)
 {
-
     /*
         Recieves the command from the input handler and executes it
     */
@@ -181,7 +96,6 @@ void execute_command(char *input, int is_background)
         temp = NULL;
         token = strtok_r(NULL, " ", &saveptr);
     }
-    args[num_args] = NULL;
 
     // printf("num_args: %d\n", num_args);
 
@@ -191,66 +105,20 @@ void execute_command(char *input, int is_background)
     remove_first_element_from_array(args, num_args); // so that args only has the arguements and not the function name
     num_args--;                                      // since we removed the first element from the array
 
-    // pid_t pid = fork();
-    // if (pid == 0)
-    // { // Child process
-    //     execvp(args[0], args);
-    //     exit(0);
-    // }
-    // else
-    // { // Parent process
-    //     if (is_background)
-    //     {
-    //         printf("Hiiii\n");
-    //     }
-    //     else
-    //     {
-    //         time_t start_time = time(NULL);
-    //         waitpid(pid, NULL, 0);
-    //         time_t end_time = time(NULL);
-    //         time_t duration = end_time - start_time;
+    args[num_args] = NULL;
 
-    //         // if (duration > 2)
-    //         // {
-    //         //     printf("THE PREVIOUS COMMAND TOOK MORE THAN 2 SECONDS\n");
-    //         // }
-    //         // else
-    //         // {
-    //         //     printf("PREVIOUS COMMAND TOOK LESSER THAN 2 SECONDS\n");
-    //         // }
-    //     }
-    // }
-
-    function_handler(function_name, args, num_args);
+    function_handler(function_name, args, num_args, is_background);
 }
 
 void input_handler(char *input)
 {
-    // The shell supports a ‘;’ or ‘&’ separated list of commands.
-    // You can use ‘strtok’ to tokenize the input.
-    // The shell accounts for random spaces and tabs when taking input.
-    // The “;” command is used to give multiple commands at the same time. This works similar to how “;” works in Bash.
-    // ‘&’ operator runs the command preceding it in the background after printing the process id of the newly created process.
-    // Remove newline character from the line if present
-    if (input[strlen(input) - 1] == '\n')
-    {
-        input[strlen(input) - 1] = '\0';
-    }
-    char *lastCommand = read_lastLine();
+    /*
+        Handles the input from the user by taking in the input string and seperating based on &  and ;
+        and then calling the execute_command function
+    */
+    addCommandToHistory(input);
 
-    lastCommand[strlen(lastCommand) - 1] = '\0';
-
-    if (strcmp(lastCommand, input) != 0 && (findWord("history", input) && (findWord("pastevents", input))))
-    {
-        addLineToHistory(input);
-    }
-
-    // printf("The command to be exectued : %s\n", input);
-
-    if (strlen(input) > 0 && input[strlen(input) - 1] == '\n')
-    {
-        input[strlen(input) - 1] = '\0';
-    }
+    // printf("The command to be executed : %s\n", input);
     char *token = strtok(input, ";");
     while (token)
     {
@@ -261,6 +129,7 @@ void input_handler(char *input)
         // If command ends with '&', set the background flag
         if (cmd[strlen(cmd) - 1] == '&')
         {
+            // printf("Background command\n");
             background = 1;
             cmd[strlen(cmd) - 1] = '\0'; // remove the '&' from the command
         }

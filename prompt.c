@@ -1,11 +1,19 @@
 #include "headers.h"
 
-void replaceSubstring(char *str, const char *old, const char *new_str) {
+void replaceSubstring(char *str, const char *old, const char *new_str)
+{
+    /*
+    Function to replace all occurences of old in str with new_str
+    */
+
+    // Used to replace the home directory with ~ in the prompt
+
     char *pos, temp[1000];
     int index = 0;
     int old_len = strlen(old);
 
-    while ((pos = strstr(str, old)) != NULL) {
+    while ((pos = strstr(str, old)) != NULL)
+    {
         strcpy(temp, str);
         index = pos - str;
         str[index] = '\0';
@@ -14,87 +22,14 @@ void replaceSubstring(char *str, const char *old, const char *new_str) {
     }
 }
 
-void find_os(int *is_Linux, int *is_Windows)
-{
-#ifdef __linux__
-    *is_Linux = 1;
-#else
-    *is_Linux = 0;
-
-#endif
-
-#ifdef _WIN32
-    *is_Windows = 1;
-#else
-    *is_Windows = 0;
-#endif
-}
-
-void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows)
-{
-    // function to find the user name and the system name from the current device
-
-    // find the USER and store it in USER_NAME
-    // find if the system is Linux or Windows and then find the username according
-
-    if (is_Linux)
-    {
-        if (getenv("USER"))
-        {
-            strcpy(user, getenv("USER"));
-            // printf("%s", getenv("USER"));
-        }
-        else
-        {
-            perror("getenv");
-            return;
-        }
-    }
-
-    // similarly check for windows
-    else if (is_Windows)
-    {
-        if (getenv("USERNAME"))
-        {
-            strcpy(user, getenv("USERNAME"));
-        }
-        else
-        {
-            perror("getenv");
-            return;
-        }
-    }
-
-    // find the system name and store it in SYSTEM_NAME
-    if (gethostname(system, sizeof(system)) == 0)
-    {
-        // printf("Hostname: %s\n", system);
-    }
-    else
-    {
-        perror("gethostname");
-        return;
-    }
-}
-
-void get_pwd(char *pwd_name)
-{
-    // get the current working directory
-    if (getcwd(pwd_name, LEN_PWD) == NULL)
-    {
-        strcpy(CURR_PWD, pwd_name);
-        perror("getcwd");
-        return;
-    }
-    else
-    {
-        // printf("Current working directory: %s\n", pwd_name);
-    }
-}
-
 void print_pwd()
 {
-    if(strstr(CURR_PWD, INIT_PWD)){
+    /*
+    Function to print the current working directory for the prompt
+    */
+
+    if (strstr(CURR_PWD, INIT_PWD))
+    {
         char temp_pwd[LEN_PWD];
         strcpy(temp_pwd, CURR_PWD);
         replaceSubstring(temp_pwd, INIT_PWD, "~");
@@ -110,10 +45,14 @@ void print_pwd()
 
 void print_prompt()
 {
+    /*
+    Function to print the prompt
+    */
+
     // add green colour to the USER_NAME
     printf("\033[1;32m<%s", USER_NAME);
-    printf("\033[0m");
-    printf("@%s: ", SYSTEM_NAME);
-    print_pwd();
-    printf("\033[0m");
+    printf("\033[0m");           // reset the colour
+    printf("@%s:", SYSTEM_NAME); // print the system name
+    print_pwd();                 // print the current working directory
+    printf("\033[0m");           // reset the colour
 }

@@ -1,15 +1,15 @@
-nano ils.h
-nano utils.h
-vim utils.h
 exit
-vim utils.h
+sleep 5
+echo hi
+nano ul.h
 nano utils.h
-echo "Lorem Ipsum"
-sleep 5 &     echo     "Lorem ipsum"
-nano utils.h
-hi
+clear
+cd ..
 exit
-hi
+cd ..
+cd 
 ls
 clear
+exit
+nano utils.h
 exit

@@ -5,80 +5,65 @@
 #define LEN_PWD 1024
 #define HISTORY_FILE ".history.txt"
 
-void init_shell();
+#define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
+
+// init.c
 void find_os(int *is_Linux, int *is_Windows);
-void isLinux(int *is_Linux);
-void isWindows(int *is_Windows);
 void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows);
-void get_pwd(char *pwd);
+void get_pwd(char *pwd_name);
+
+//  main.c
+void handler(int sig);
+void init_shell();
+void exit_shell();
+
+// prompt.c
+void replaceSubstring(char *str, const char *old, const char *new_str);
+void print_pwd();
 void print_prompt();
-void check_background_processes();
 
-void input_handler(char *input);
+// background.c
+void check_bg_processes();
 
-void function_handler(char *function_name, char *args[], int num_args);
-
-
-
-// Function prototypes
-void peek();
-void peek_a();
-void peek_l();
-void peek_al();
-void pastevents();
-
-
-
-
-// INPUT HANDLER
-void input_handler(char *input);
-void execute_command(char *input, int bg);
-void remove_first_element_from_array(char *args[], int num_args); // since the first word in the command is the function itslef but we just want the arguements in the args array
+// input_handler.c
 int findWord(char *word, char *line);
 void trimString(char *str);
-void handler(int sig_num);
+void remove_first_element_from_array(char *args[], int num_args); // since the first word in the command is the function itslef but we just want the arguements in the args array
+void execute_command(char *input, int bg);
+void input_handler(char *input);
 
+// function_handler.c
+void function_handler(char *function_name, char *args[], int num_args, int is_bg);
 
-
-// WARP
-void warp(char *args[], int num_args);
-char* checkSlashes( char *path);
-int isValidDirectory( char *path);
+// warp.c
+char *checkSlashes(char *path);
+int isValidDirectory(char *path);
 char *get_prev_directory_string(char *path);
 void change_directory(char *path);
+void warp(char *args[], int num_args);
 
-
-// PEEK
+// peek.c
 char *get_path(char *path);
 int is_directory(const char *path);
 void list_directory(const char *path, int show_all, int long_format);
 void peek(char *args[], int num_args);
 
-
-
-// PASTEVENTS
-void pastevents();
-void addLineToHistory(char *input);
-char *read_lastLine();
-void pastevents();
-void pastevents_purge();
-void execute_pastevent(int command_number);
+// pastevents.c
 void checkHistoryFile();
-
-
-
-// PROCLORE
-void proclore(int num_args, char *argv[]);
-
-
-// SEEK
-void seek(int num_args, char *args[]);
-
-
-
-
-
-
 char *read_lastLine();
+void addCommandToHistory(char *input);
+void execute_pastevent(int command_number);
+void pastevents_purge();
+void pastevents();
+void pastevents_driver(int arg_count, char *args[]);
+
+// proclore.c
+void print_virtualMemUsage(int pid);
+void print_Process_info(int pid);
+void proclore_driver(int num_args, char *argv[]);
+
+// seek.c
+void seek_recursive(const char *name, const char *search, int file_flag, int dir_flag, int exact_flag, int *count, char *exactMatch);
+void seek(int num_args, char *args[]);
 
 #endif // #UTILS_H
