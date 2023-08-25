@@ -56,14 +56,14 @@ void addCommandToHistory(char *input)
 
     // check if the input is not empty by checking if has alpha numeric characters
 
-
-
     char *lastCommand = read_lastLine();
 
     lastCommand[strlen(lastCommand) - 1] = '\0';
+    // char *tempPtr = (char *)malloc(1024 * sizeof(char));
+    // while (tempPtr= strstr(lastCommand, "history execute") != NULL)
+    // {
 
-    
-
+    // }
 
     // If the last command is the same as the current command, don't add it to the history file
     // If the command is history or pastevents, don't add it to the history file
@@ -76,8 +76,8 @@ void addCommandToHistory(char *input)
 
         int num_lines = 0;
         char *fileName = HISTORY_FILE;
-        char tempFileName[1024] ;
-         strcpy(tempFileName,HOME_DIR);
+        char tempFileName[1024];
+        strcpy(tempFileName, HOME_DIR);
         strcat(tempFileName, "temp_file.txt");
 
         FILE *file = fopen(fileName, "r");
@@ -157,7 +157,7 @@ void addCommandToHistory(char *input)
     }
 }
 
-void execute_pastevent(int command_number)
+char *find_nth_line(int n)
 {
     checkHistoryFile();
     // printf("hiiii");
@@ -168,7 +168,7 @@ void execute_pastevent(int command_number)
     if (file == NULL)
     {
         perror("Error opening file");
-        return;
+        return "";
     }
 
     // Count the total number of lines in the file
@@ -185,36 +185,42 @@ void execute_pastevent(int command_number)
     // printf("Total lines : %d\n", totalLines);
 
     // Validate the desired line number
-    if (command_number <= 0 || command_number > totalLines)
+    if (n <= 0 || n > totalLines)
     {
         printf("Invalid line number\n");
         fclose(file);
-        return;
+        return "";
     }
 
     // Move the file pointer to the beginning of the desired line from the bottom
     fseek(file, 0, SEEK_SET);
-    int targetLine = totalLines - command_number + 1;
+    int targetLine = totalLines - n + 1;
     for (int j = 1; j < targetLine; j++)
     {
         while ((c = fgetc(file)) != EOF && c != '\n')
             ;
     }
 
-    
-
     // Read and print the desired line
-    char line[256];
+    char *line = (char *)malloc(1024 * sizeof(char));
     if (fgets(line, sizeof(line), file) != NULL)
     {
-        // printf("Line %d from the bottom: %s", command_number, line);
+        // printf("Line %d from the bottom: %s", n, line);
 
         // Remove the newline character from the end of the line
         line[strlen(line) - 1] = '\0';
-        input_handler(line);
     }
-
     fclose(file);
+
+    return line;
+}
+
+void execute_pastevent(int command_number)
+{
+
+    input_handler(find_nth_line(command_number));
+
+    // return line;
 }
 
 void pastevents_purge()
@@ -232,7 +238,7 @@ void pastevents()
     checkHistoryFile();
 
     // read the contents of the .history.txt file and print them on the screen
-    
+
     char buffer[256]; // Buffer to store each line
 
     // Open the file for reading

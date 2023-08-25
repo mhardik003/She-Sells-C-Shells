@@ -25,18 +25,20 @@ void syscalls(int num_args, char *args[], char *function_name, int is_bg)
     {
         if (is_bg)
         {
-            int devnull = open("/dev/null", O_WRONLY);
-            dup2(devnull, STDOUT_FILENO);
-            dup2(devnull, STDERR_FILENO);
-            close(devnull);
+            int file = open(TEMP_BG_OUTPUT_FILE, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+            dup2(file, STDOUT_FILENO);
+            dup2(file, STDERR_FILENO);
+            close(file);
         }
 
         if (execvp(args[0], args) == -1)
         {
-            perror("Exec failed");
-            exit(EXIT_FAILURE);
+            printf("ERROR : '%s' is not a valid command\n", args[0]);
+            // perror("Exec failed");
+            exit(1);
         }
     }
+
     else
     {
         if (is_bg)
@@ -52,7 +54,6 @@ void syscalls(int num_args, char *args[], char *function_name, int is_bg)
             waitpid(pid, &status, WUNTRACED);
             time(&end);
             prevElapsedTime = (int)difftime(end, start);
-            
         }
     }
 }

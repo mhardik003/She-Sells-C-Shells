@@ -7,6 +7,7 @@
 #define MAX_LEN 1024
 #define LEN_PWD 1024
 #define MAX_HISTORY_LENGTH 15
+#define TEMP_BG_OUTPUT_FILE "/tmp/bg_output_all"
 
 
 #include <sys/stat.h>

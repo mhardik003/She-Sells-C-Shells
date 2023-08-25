@@ -141,7 +141,7 @@ void change_directory(char *path)
         {
             if (has_read_permissions(path))
             {
-                printf("yo\n");
+                // printf("yo\n");
                 strcpy(PREV_PWD, CURR_PWD);
                 strcpy(CURR_PWD, path);
                 printf("%s\n", CURR_PWD);

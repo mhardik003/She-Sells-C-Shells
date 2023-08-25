@@ -1,15 +1,15 @@
-sleep 3
-cd
-ls -al
-cd
-ls -al
+clear
+seek 1
 ls
-cd AMNESIA
-cd /
-cd AMNESIA
-cd home
-cd AMNESIA
-cd hardk
-cd AMNESIA
-cd College
-ls -al
+seek 1
+exit
+seek 1
+seek boot /
+seek test_dir test_dir
+exit
+seek boot ./
+seek boot /
+seek boot /hardk
+seek boot /home
+seek boot //
+clear

@@ -96,6 +96,7 @@ void execute_command(char *input, int is_background)
         temp = NULL;
         token = strtok_r(NULL, " \t", &saveptr);
     }
+    
 
     // printf("num_args: %d\n", num_args);
 
@@ -116,6 +117,8 @@ void input_handler(char *input)
         Handles the input from the user by taking in the input string and seperating based on &  and ;
         and then calling the execute_command function
     */
+    prevElapsedTime = 0;
+
     int is_empty = 1;
     for (int i = 0; i < strlen(input); i++)
     {
@@ -149,7 +152,7 @@ void input_handler(char *input)
         // If command ends with '&', set the background flag
         curr_index = curr_index + strlen(token);
 
-        if (curr_index < strlen(input) && !first_token )
+        if (curr_index < strlen(input) && !first_token)
         {
             curr_index++;
         }
