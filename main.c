@@ -6,15 +6,17 @@ void init_shell()
         Function to initialize the shell
     */
     clear();
-    get_pwd(INIT_PWD);
+    get_pwd(HOME_DIR);
     get_pwd(CURR_PWD);
-    get_pwd(PREV_PWD);
+    strcpy(HISTORY_FILE, HOME_DIR);
+    strcat(HISTORY_FILE, "/.history.txt");
+    strcpy(PREV_PWD, "NULL");
     exit_call_bool = 0;
     find_os(&isLinuxBool, &isWindowsBool);
     get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
-
-    // check if history file exists
-    checkHistoryFile();
+    initialize_bgNames();
+        // check if history file exists
+        checkHistoryFile();
 }
 
 void exit_shell()

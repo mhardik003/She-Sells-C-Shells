@@ -3,6 +3,11 @@
 
 void function_handler(char *function_name, char *args[], int num_args, int is_bg)
 {
+    /*
+        Function to handle the function calls
+    */
+
+    prevElapsedTime = 0;
 
     if (strcmp(function_name, "clear") == 0)
     {
@@ -45,32 +50,7 @@ void function_handler(char *function_name, char *args[], int num_args, int is_bg
     {
         // Add the command to args[0] and shift all the other elements to the right
         // Since execvp requires the first arguement to be the command itself
-        for (int i = num_args; i > 0; i--)
-        {
-            args[i] = args[i - 1];
-        }
-        args[0] = function_name;
-
-        // Add NULL to the end of args
-        args[num_args + 1] = NULL;
-
-        pid_t child_pid = fork();
-        if (child_pid == 0)
-        { // In child
-            if (execvp(args[0], args) == -1)
-            {
-                perror("Error executing command");
-                exit(EXIT_FAILURE);
-            }
-        }
-        else if (child_pid > 0)
-        { // In parent
-            int status;
-            waitpid(child_pid, &status, WUNTRACED);
-        }
-        else if (child_pid < 0)
-        {
-            perror("Error forking");
-        }
+        strcpy(LAST_COMMAND, function_name);
+        syscalls(num_args, args, function_name, is_bg);
     }
 }

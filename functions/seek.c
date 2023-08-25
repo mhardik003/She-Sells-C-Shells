@@ -1,9 +1,20 @@
 #include "../headers.h"
 
+void get_name_without_extension(const char *filename, char *name)
+{
+    strcpy(name, filename);
+    char *dot = strrchr(name, '.');
+    if (dot)
+    {
+        *dot = '\0'; // Truncate the name at the last dot
+    }
+}
+
 void seek_recursive(const char *name, const char *search, int file_flag, int dir_flag, int exact_flag, int *count, char *exactMatch)
 {
     DIR *dir;
     struct dirent *entry;
+    char *name_without_extension = (char *)malloc(1024 * sizeof(char));
 
     if (!(dir = opendir(name)))
     {
@@ -12,6 +23,7 @@ void seek_recursive(const char *name, const char *search, int file_flag, int dir
 
     while ((entry = readdir(dir)) != NULL)
     {
+        get_name_without_extension(entry->d_name, name_without_extension);
         if (entry->d_type == DT_DIR)
         {
             char path[1024];
@@ -24,7 +36,7 @@ void seek_recursive(const char *name, const char *search, int file_flag, int dir
                 continue;
             }
 
-            if (strcmp(entry->d_name, search) == 0 && (dir_flag))
+            if (strcmp(name_without_extension, search) == 0 && (dir_flag))
             {
                 // printf("DIR: %s\n", entry->d_name);
                 (*count)++;
@@ -48,7 +60,7 @@ void seek_recursive(const char *name, const char *search, int file_flag, int dir
             strcat(filePath, "/");
             strcat(filePath, entry->d_name);
 
-            if (strcmp(entry->d_name, search) == 0 && file_flag)
+            if (strcmp(name_without_extension, search) == 0 && file_flag)
             {
                 (*count)++;
                 if (*count == 1 && (exact_flag))
@@ -118,6 +130,11 @@ void seek(int num_args, char *args[])
     {
         file_flag = 0;
     }
+    else if (file_bool == 1 && dir_bool == 1)
+    {
+        printf("Invalid Flags!\n");
+        return;
+    }
 
     seek_recursive(target_dir, search, file_flag, dir_flag, exact_flag, &count, exactMatch);
 
@@ -128,17 +145,12 @@ void seek(int num_args, char *args[])
 
         if (S_ISDIR(st.st_mode))
         {
-            change_directory(exactMatch);
-
-            // if (warp(directory_args, 1))
-            // {
-            //     printf("Missing permissions for task!\n");
-            //     return;
-            // }
             printf("\033[1;34m%s/\033[0m\n", exactMatch);
+            change_directory(exactMatch);
         }
         else
         {
+            printf("\033[1;32m%s\033[0m\n", exactMatch);
             FILE *fp = fopen(exactMatch, "r");
             if (fp == NULL)
             {

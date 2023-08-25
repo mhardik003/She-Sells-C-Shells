@@ -106,6 +106,7 @@ void print_Process_info(int pid)
         return;
     }
     buf[len] = '\0';
+    replaceSubstring(buf, HOME_DIR, "~");
 
     printf("Executable Path: %s\n", buf);
 }

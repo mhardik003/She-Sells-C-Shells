@@ -6,23 +6,25 @@
 
 #include <unistd.h>
 
-typedef struct
-{
-    pid_t pid;
-    char cmd[50];
-} bg_process;
 
-extern bg_process bg_procs[1024];
+extern pid_t backgroundProcesses[100];
+extern char *backgroundProcessNames[100];
 extern int bg_count;
 
 extern char USER_NAME[];
 extern char SYSTEM_NAME[];
-extern char INIT_PWD[];
+extern char HOME_DIR[];
 extern char PREV_PWD[];
 extern char CURR_PWD[];
+extern char  HISTORY_FILE [];
+
+
+extern char LAST_COMMAND[];
+
 
 extern int isWindowsBool;
 extern int exit_call_bool;
 extern int isLinuxBool;
+extern int prevElapsedTime;
 
 #endif

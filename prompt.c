@@ -28,16 +28,16 @@ void print_pwd()
     Function to print the current working directory for the prompt
     */
 
-    if (strstr(CURR_PWD, INIT_PWD))
+    if (strstr(CURR_PWD, HOME_DIR))
     {
         char temp_pwd[LEN_PWD];
         strcpy(temp_pwd, CURR_PWD);
-        replaceSubstring(temp_pwd, INIT_PWD, "~");
-        printf("\033[1;34m%s> ", temp_pwd);
+        replaceSubstring(temp_pwd, HOME_DIR, "~");
+        printf("\033[1;34m%s", temp_pwd);
     }
     else
     {
-        printf("\033[1;34m%s> ", CURR_PWD);
+        printf("\033[1;34m%s", CURR_PWD);
 
         // printf("meow");
     }
@@ -54,5 +54,12 @@ void print_prompt()
     printf("\033[0m");           // reset the colour
     printf("@%s:", SYSTEM_NAME); // print the system name
     print_pwd();                 // print the current working directory
-    printf("\033[0m");           // reset the colour
+    if (prevElapsedTime > 2)
+    {
+        printf("\033[1;31m %s : ", LAST_COMMAND);
+        printf("\033[0m"); // reset the colour
+        printf("%ds", prevElapsedTime);
+    }
+
+    printf("\033[1;34m > \033[0m"); // reset the colour
 }

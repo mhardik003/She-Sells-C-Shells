@@ -3,9 +3,14 @@
 
 #define MAX_LEN 1024
 #define LEN_PWD 1024
-#define HISTORY_FILE ".history.txt"
+
 
 #define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
+
+
+// headers.h
+void initialize_bgNames();
+
 
 // init.c
 void find_os(int *is_Linux, int *is_Windows);
@@ -36,6 +41,7 @@ void input_handler(char *input);
 void function_handler(char *function_name, char *args[], int num_args, int is_bg);
 
 // warp.c
+int has_read_permissions(char *path);
 char *checkSlashes(char *path);
 int isValidDirectory(char *path);
 char *get_prev_directory_string(char *path);
@@ -43,8 +49,10 @@ void change_directory(char *path);
 void warp(char *args[], int num_args);
 
 // peek.c
+void color_print_name(const char *name, const char *filepath);
 char *get_path(char *path);
 int is_directory(const char *path);
+int is_executable(const char *path);
 void list_directory(const char *path, int show_all, int long_format);
 void peek(char *args[], int num_args);
 
@@ -63,7 +71,10 @@ void print_Process_info(int pid);
 void proclore_driver(int num_args, char *argv[]);
 
 // seek.c
+void get_name_without_extension(const char *filename, char *name);
 void seek_recursive(const char *name, const char *search, int file_flag, int dir_flag, int exact_flag, int *count, char *exactMatch);
 void seek(int num_args, char *args[]);
+
+void syscalls(int num_args, char *args[], char *function_name, int is_bg);
 
 #endif // #UTILS_H

@@ -11,13 +11,28 @@ char *get_path(char *path)
     else if (strcmp(path, "..") == 0)
     {
         // Go to previous directory
-
-        return (isValidDirectory(get_prev_directory_string(CURR_PWD)) ? get_prev_directory_string(CURR_PWD) : "/");
+        char *temp = (char *)malloc(LEN_PWD * sizeof(char));
+        strcpy(temp, CURR_PWD);
+        if (isValidDirectory(get_prev_directory_string(temp)))
+        {
+            if (has_read_permissions(CURR_PWD))
+            {
+                strcpy(PREV_PWD, temp);
+                strcpy(CURR_PWD, CURR_PWD);
+                chdir(CURR_PWD);
+            }
+            else
+            {
+                printf("Missing permissions for the task\n");
+                strcpy(CURR_PWD, temp);
+            }
+        }
+        return temp;
     }
     else if (strcmp(path, "~") == 0)
     {
         // Go to home directory
-        return INIT_PWD;
+        return HOME_DIR;
     }
     else if (strcmp(path, "-") == 0)
     {
@@ -69,7 +84,7 @@ void list_directory(const char *path, int show_all, int long_format)
     d = opendir(path);
     if (d == NULL)
     {
-        perror("ls : Unable to read directory");
+        perror("peek ");
         return;
     }
 
@@ -137,6 +152,10 @@ void list_directory(const char *path, int show_all, int long_format)
             {
                 printf(" \033[34m%s/\033[0m\n", entries[i]); // Blue for directory
             }
+            else if (file_stat.st_mode & S_IXUSR)
+            {
+                printf(" \033[32m%s*\033[0m\n", entries[i]); // Green for executable
+            }
             else
             {
                 printf(" %s\n", entries[i]);
@@ -147,6 +166,10 @@ void list_directory(const char *path, int show_all, int long_format)
             if (is_directory(filepath))
             {
                 printf(" \033[34m%s/\033[0m\n", entries[i]); // Blue for directory
+            }
+            else if (file_stat.st_mode & S_IXUSR)
+            {
+                printf(" \033[32m%s*\033[0m\n", entries[i]); // Green for executable
             }
             else
             {

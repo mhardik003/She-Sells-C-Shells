@@ -88,13 +88,13 @@ void execute_command(char *input, int is_background)
 
     // getting all the arguements for the command
     int num_args = 0;
-    token = strtok_r(temp, " ", &saveptr);
+    token = strtok_r(temp, " \t", &saveptr);
     while (token)
     {
         args[num_args] = token;
         num_args++;
         temp = NULL;
-        token = strtok_r(NULL, " ", &saveptr);
+        token = strtok_r(NULL, " \t", &saveptr);
     }
 
     // printf("num_args: %d\n", num_args);
@@ -116,10 +116,30 @@ void input_handler(char *input)
         Handles the input from the user by taking in the input string and seperating based on &  and ;
         and then calling the execute_command function
     */
+    int is_empty = 1;
+    for (int i = 0; i < strlen(input); i++)
+    {
+        if (isalnum(input[i]))
+        {
+            is_empty = 0;
+            break;
+        }
+    }
+    if (is_empty)
+    {
+        return;
+    }
+
     addCommandToHistory(input);
 
     // printf("The command to be executed : %s\n", input);
-    char *token = strtok(input, ";");
+
+    char *input_copy = (char *)malloc(strlen(input) * sizeof(char));
+    strcpy(input_copy, input);
+    char *token = strtok(input_copy, ";&");
+
+    int curr_index = 0;
+    int first_token = 1;
     while (token)
     {
         // printf("INDIVIDUAL COMMAND : %s\n", token);
@@ -127,15 +147,26 @@ void input_handler(char *input)
         int background = 0;
 
         // If command ends with '&', set the background flag
-        if (cmd[strlen(cmd) - 1] == '&')
+        curr_index = curr_index + strlen(token);
+
+        if (curr_index < strlen(input) && !first_token )
         {
-            // printf("Background command\n");
+            curr_index++;
+        }
+        if (input[curr_index] == '&')
+        {
             background = 1;
-            cmd[strlen(cmd) - 1] = '\0'; // remove the '&' from the command
         }
 
+        // printf("Index pos : %d\n", curr_index);
+        // printf("Character at index pos : %c\n", input[curr_index]);
+
+        trimString(cmd);
+        // printf("Command to be executed: %s\n", cmd);
+        // printf("Background flag : %d\n", background);
         execute_command(cmd, background);
 
-        token = strtok(NULL, ";");
+        token = strtok(NULL, ";&");
+        first_token = 0;
     }
 }

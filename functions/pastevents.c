@@ -54,9 +54,16 @@ char *read_lastLine()
 void addCommandToHistory(char *input)
 {
 
+    // check if the input is not empty by checking if has alpha numeric characters
+
+
+
     char *lastCommand = read_lastLine();
 
     lastCommand[strlen(lastCommand) - 1] = '\0';
+
+    
+
 
     // If the last command is the same as the current command, don't add it to the history file
     // If the command is history or pastevents, don't add it to the history file
@@ -69,7 +76,9 @@ void addCommandToHistory(char *input)
 
         int num_lines = 0;
         char *fileName = HISTORY_FILE;
-        char tempFileName[] = "temp_file.txt";
+        char tempFileName[1024] ;
+         strcpy(tempFileName,HOME_DIR);
+        strcat(tempFileName, "temp_file.txt");
 
         FILE *file = fopen(fileName, "r");
         if (file == NULL)
@@ -173,7 +182,7 @@ void execute_pastevent(int command_number)
         }
     }
 
-    printf("Total lines : %d\n", totalLines);
+    // printf("Total lines : %d\n", totalLines);
 
     // Validate the desired line number
     if (command_number <= 0 || command_number > totalLines)
@@ -192,11 +201,16 @@ void execute_pastevent(int command_number)
             ;
     }
 
+    
+
     // Read and print the desired line
     char line[256];
     if (fgets(line, sizeof(line), file) != NULL)
     {
-        printf("Line %d from the bottom: %s", command_number, line);
+        // printf("Line %d from the bottom: %s", command_number, line);
+
+        // Remove the newline character from the end of the line
+        line[strlen(line) - 1] = '\0';
         input_handler(line);
     }
 
@@ -218,12 +232,12 @@ void pastevents()
     checkHistoryFile();
 
     // read the contents of the .history.txt file and print them on the screen
-    char fileName[] = HISTORY_FILE;
+    
     char buffer[256]; // Buffer to store each line
 
     // Open the file for reading
     FILE *file;
-    file = fopen(fileName, "r");
+    file = fopen(HISTORY_FILE, "r");
     if (file == NULL)
     {
         perror("Error opening file");

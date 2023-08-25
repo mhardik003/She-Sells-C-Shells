@@ -1,15 +1,15 @@
-exit
-sleep 5
-echo hi
-nano ul.h
-nano utils.h
-clear
-cd ..
-exit
-cd ..
-cd 
+sleep 3
+cd
+ls -al
+cd
+ls -al
 ls
-clear
-exit
-nano utils.h
-exit
+cd AMNESIA
+cd /
+cd AMNESIA
+cd home
+cd AMNESIA
+cd hardk
+cd AMNESIA
+cd College
+ls -al

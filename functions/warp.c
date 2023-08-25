@@ -1,5 +1,12 @@
 #include "../headers.h"
 
+int has_read_permissions(char *path)
+{
+    struct stat st;
+    stat(path, &st);
+    return (st.st_mode & S_IRUSR);
+}
+
 char *checkSlashes(char *path)
 {
     int len = strlen(path);
@@ -42,11 +49,13 @@ char *get_prev_directory_string(char *path)
             // printf("last slash : '%s'\n", last_slash);
             *last_slash = '\0';
         }
+        strcat(path, "/");
     }
     else
     {
         strcpy(path, "/");
     }
+    // printf("path after cd .. : %s\n", path);
     return path;
 }
 
@@ -60,8 +69,22 @@ void change_directory(char *path)
     else if (strcmp(path, "..") == 0)
     {
         // Go to previous directory
-        strcpy(PREV_PWD, CURR_PWD);
-        strcpy(CURR_PWD, isValidDirectory(get_prev_directory_string(CURR_PWD)) ? CURR_PWD : "/");
+        char *temp = (char *)malloc(LEN_PWD * sizeof(char));
+        strcpy(temp, CURR_PWD);
+        if (isValidDirectory(get_prev_directory_string(CURR_PWD)))
+        {
+            if (has_read_permissions(CURR_PWD))
+            {
+                strcpy(PREV_PWD, temp);
+                strcpy(CURR_PWD, CURR_PWD);
+                chdir(CURR_PWD);
+            }
+            else
+            {
+                printf("Missing permissions for the task\n");
+                strcpy(CURR_PWD, temp);
+            }
+        }
         printf("%s\n", CURR_PWD);
     }
     else if (path[0] == '~')
@@ -69,14 +92,25 @@ void change_directory(char *path)
         if (path[1] == '/')
         {
             path = path + 2;
-            change_directory(path);
+            char *temp_dir = (char *)malloc(LEN_PWD * sizeof(char));
+            strcpy(temp_dir, HOME_DIR);
+            strcat(temp_dir, "/");
+            strcat(temp_dir, path);
+            if (isValidDirectory(temp_dir))
+            {
+                strcpy(PREV_PWD, CURR_PWD);
+                strcpy(CURR_PWD, HOME_DIR);
+                chdir(CURR_PWD);
+                change_directory(path);
+            }
         }
         else if (strcmp(path, "~") == 0)
         {
             // Go to home directory
             strcpy(PREV_PWD, CURR_PWD);
-            strcpy(CURR_PWD, INIT_PWD);
+            strcpy(CURR_PWD, HOME_DIR);
             printf("%s\n", CURR_PWD);
+            chdir(CURR_PWD);
         }
         else
         {
@@ -86,20 +120,37 @@ void change_directory(char *path)
     }
     else if (strcmp(path, "-") == 0)
     {
+
+        if (strcmp(PREV_PWD, "NULL") == 0)
+        {
+            printf("warp: OLDPWD not set\n");
+            return;
+        }
+
         // Go to previous directory
         char *temp = (char *)malloc(LEN_PWD * sizeof(char));
         strcpy(temp, CURR_PWD);
         strcpy(CURR_PWD, PREV_PWD);
         strcpy(PREV_PWD, temp);
         printf("%s\n", CURR_PWD);
+        chdir(CURR_PWD);
     }
     else if (path[0] == '/')
     {
         if (isValidDirectory(path))
         {
-            strcpy(PREV_PWD, CURR_PWD);
-            strcpy(CURR_PWD, path);
-            printf("%s\n", CURR_PWD);
+            if (has_read_permissions(path))
+            {
+                printf("yo\n");
+                strcpy(PREV_PWD, CURR_PWD);
+                strcpy(CURR_PWD, path);
+                printf("%s\n", CURR_PWD);
+                chdir(CURR_PWD);
+            }
+            else
+            {
+                printf("Missing permissions for the task\n");
+            }
         }
         else
         {
@@ -107,6 +158,7 @@ void change_directory(char *path)
             return;
         }
     }
+
     else
     {
         // Go to the specified directory
@@ -123,15 +175,23 @@ void change_directory(char *path)
         // printf("temporary path to be check for validity : %s\n", temp_dir);
         if (isValidDirectory(temp_dir))
         {
-            strcpy(PREV_PWD, CURR_PWD);
-            if (CURR_PWD[strlen(CURR_PWD) - 1] != '/')
+            if (has_read_permissions(temp_dir))
             {
+                strcpy(PREV_PWD, CURR_PWD);
+                if (CURR_PWD[strlen(CURR_PWD) - 1] != '/')
+                {
 
-                strcat(CURR_PWD, "/");
+                    strcat(CURR_PWD, "/");
+                }
+
+                strcat(CURR_PWD, path);
+                printf("%s\n", CURR_PWD);
+                chdir(CURR_PWD);
             }
-
-            strcat(CURR_PWD, path);
-            printf("%s\n", CURR_PWD);
+            else
+            {
+                printf("Missing permissions for the task\n");
+            }
         }
         else
         {
@@ -151,7 +211,7 @@ void warp(char *args[], int num_args)
     {
         // Go to home directory
         strcpy(PREV_PWD, CURR_PWD);
-        strcpy(CURR_PWD, INIT_PWD);
+        strcpy(CURR_PWD, HOME_DIR);
     }
 
     for (int i = 0; i < num_args; i++)

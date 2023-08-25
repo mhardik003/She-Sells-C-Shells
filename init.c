@@ -27,31 +27,15 @@ void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Window
     */
 
     // find if the system is Linux or Windows and then find the username according in USER_NAME global variable
-    if (is_Linux)
+    struct passwd *p = getpwuid(getuid());
+    if (p)
     {
-        if (getenv("USER"))
-        {
-            strcpy(user, getenv("USER"));
-            // printf("%s", getenv("USER"));
-        }
-        else
-        {
-            perror("getenv");
-            return;
-        }
+        strcpy(user, p->pw_name);
     }
-
-    else if (is_Windows)
+    else
     {
-        if (getenv("USERNAME"))
-        {
-            strcpy(user, getenv("USERNAME"));
-        }
-        else
-        {
-            perror("getenv");
-            return;
-        }
+        perror("getpwuid() error");
+        return;
     }
 
     // find the system name and store it in SYSTEM_NAME
