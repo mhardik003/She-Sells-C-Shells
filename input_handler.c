@@ -86,6 +86,16 @@ void execute_command(char *input, int is_background)
     char *temp = (char *)malloc(length_input * sizeof(char)); // to store the input temporarily
     strcpy(temp, input);
 
+    // check if the input contains some alphanumeric values
+    int isEmpty = 1;
+    for (int i = 0; i < strlen(input); i++)
+    {
+        if (isalnum(input[i]))
+            isEmpty = 0;
+    }
+    if (isEmpty)
+        return;
+
     // getting all the arguements for the command
     int num_args = 0;
     token = strtok_r(temp, " \t", &saveptr);
@@ -96,7 +106,6 @@ void execute_command(char *input, int is_background)
         temp = NULL;
         token = strtok_r(NULL, " \t", &saveptr);
     }
-    
 
     // printf("num_args: %d\n", num_args);
 
@@ -165,7 +174,7 @@ void input_handler(char *input)
         // printf("Character at index pos : %c\n", input[curr_index]);
 
         trimString(cmd);
-        // printf("Command to be executed: %s\n", cmd);
+        // printf("Command to be executed: '%s'\n", cmd);
         // printf("Background flag : %d\n", background);
         execute_command(cmd, background);
 

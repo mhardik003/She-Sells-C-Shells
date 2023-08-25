@@ -1,15 +1,15 @@
-clear
-seek 1
-ls
-seek 1
-exit
-seek 1
-seek boot /
-seek test_dir test_dir
-exit
 seek boot ./
 seek boot /
 seek boot /hardk
 seek boot /home
 seek boot //
 clear
+echo hi;  ;
+echo hi ;   ;
+echo;   ;
+echo hi;   ;
+ecit
+exit
+echo hi;   ;
+clear
+exit

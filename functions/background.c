@@ -2,6 +2,9 @@
 
 void displayOutputAndCleanup()
 {
+    /*
+         Display output of background processes and clean it up from the temporary file
+    */
     char buffer[MAX_LEN];
     FILE *f = fopen("/tmp/bg_output_all", "r");
 
@@ -21,6 +24,7 @@ void check_bg_processes()
     /*
     Function to check if any background processes have ended
     */
+   
     int anyCompleted = 0;
 
     for (int i = 0; i < bg_count; i++)
@@ -30,9 +34,8 @@ void check_bg_processes()
 
         if (result != 0)
         {
-            
-                displayOutputAndCleanup();
-            
+
+            displayOutputAndCleanup();
 
             if (WIFEXITED(status))
             {
