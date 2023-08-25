@@ -44,10 +44,8 @@ void seek_recursive(const char *name, const char *search, int file_flag, int dir
                 {
                     strcpy(exactMatch, path);
                 }
-                
-                
-                    printf("\033[1;34m%s/\033[0m\n", path);
-                
+
+                printf("\033[1;34m%s/\033[0m\n", path);
             }
 
             seek_recursive(path, search, file_flag, dir_flag, exact_flag, count, exactMatch);
@@ -118,7 +116,7 @@ void seek(int num_args, char *args[])
             else
             {
                 target_dir = args[i];
-                if(target_dir[0]=='.' && target_dir[1]=='/')
+                if (target_dir[0] == '.' && target_dir[1] == '/')
                 {
                     target_dir = target_dir + 2;
                 }
@@ -144,7 +142,6 @@ void seek(int num_args, char *args[])
     // printf("Dir Flag : %d\n", dir_flag);
     // printf("Exact Flag : %d\n", exact_flag);
     seek_recursive(target_dir, search, file_flag, dir_flag, exact_flag, &count, exactMatch);
-
 
     // printf("Count : %d\n", count);
     if (count == 1 && (exact_flag == 1))

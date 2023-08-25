@@ -24,7 +24,7 @@ void check_bg_processes()
     /*
     Function to check if any background processes have ended
     */
-   
+
     int anyCompleted = 0;
 
     for (int i = 0; i < bg_count; i++)

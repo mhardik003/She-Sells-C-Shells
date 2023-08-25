@@ -1,11 +1,11 @@
 # Description
+
 - Bash shell implemented in C
 
 # Assumptions
-- None
 
+- None
 
 # Program Flow
 
 - [Main](#main)
-

@@ -2,7 +2,9 @@
 
 void checkHistoryFile()
 {
-    // program to check the fie exists, if not then create it
+    /*
+    Check if the .history.txt file exists in the home directory
+    */
     FILE *file = fopen(HISTORY_FILE, "r");
 
     if (file == NULL)
@@ -27,12 +29,14 @@ void checkHistoryFile()
 
 char *read_lastLine()
 {
+
+    /*
+        Read the last line of the .history.txt file and return it
+    */
+
     checkHistoryFile();
 
-    // read the last line from the .history.txt file and store it in a string
-    // return 0 if the file is empty
-    // return if the file is not empty
-    char *last_line = malloc(1000 * sizeof(char));
+    char *last_line = malloc(1024 * sizeof(char));
     FILE *fp = fopen(HISTORY_FILE, "r");
     if (fp == NULL)
     {
@@ -40,7 +44,7 @@ char *read_lastLine()
         exit(1);
     }
     int count = 0;
-    while (fgets(last_line, 1000, fp) != NULL)
+    while (fgets(last_line, 1024, fp) != NULL)
     {
         count++;
     }
@@ -53,27 +57,22 @@ char *read_lastLine()
 
 void addCommandToHistory(char *input)
 {
+    /*
+        Add the input to the .history.txt file if the conditions meet
+    */
 
-    // check if the input is not empty by checking if has alpha numeric characters
-
+    checkHistoryFile();
     char *lastCommand = read_lastLine();
 
     lastCommand[strlen(lastCommand) - 1] = '\0';
-    // char *tempPtr = (char *)malloc(1024 * sizeof(char));
-    // while (tempPtr= strstr(lastCommand, "history execute") != NULL)
-    // {
-
-    // }
 
     // If the last command is the same as the current command, don't add it to the history file
     // If the command is history or pastevents, don't add it to the history file
     if (strcmp(lastCommand, input) != 0 && (findWord("history", input) && (findWord("pastevents", input))))
     {
 
-        checkHistoryFile();
-        // count the number of lines in the .history.txt file
-        // if the number of lines is greater than MAX_HISTORY_LEN, delete the first line
-
+        // Count the number of lines in the .history.txt file
+        // If the number of lines is greater than MAX_HISTORY_LEN, delete the first line
         int num_lines = 0;
         char *fileName = HISTORY_FILE;
         char tempFileName[1024];
@@ -160,9 +159,6 @@ void addCommandToHistory(char *input)
 char *find_nth_line(int n)
 {
     checkHistoryFile();
-    // printf("hiiii");
-
-    // printf("Executing the command number %d\n", command_number);
 
     FILE *file = fopen(HISTORY_FILE, "r");
     if (file == NULL)
@@ -181,8 +177,6 @@ char *find_nth_line(int n)
             totalLines++;
         }
     }
-
-    // printf("Total lines : %d\n", totalLines);
 
     // Validate the desired line number
     if (n <= 0 || n > totalLines)
@@ -203,13 +197,10 @@ char *find_nth_line(int n)
 
     // Read and print the desired line
     char *line = (char *)malloc(1024 * sizeof(char));
-    if (fgets(line, sizeof(line), file) != NULL)
-    {
-        // printf("Line %d from the bottom: %s", n, line);
-
-        // Remove the newline character from the end of the line
-        line[strlen(line) - 1] = '\0';
-    }
+    fgets(line, 1024, file);
+    // remove the newline character from the end of the line
+    line[strlen(line) - 1] = '\0';
+    // printf("Line at %d is %s\", n, line);
     fclose(file);
 
     return line;

@@ -1,15 +1,16 @@
-seek boot ./
-seek boot /
-seek boot /hardk
-seek boot /home
-seek boot //
-clear
-echo hi;  ;
-echo hi ;   ;
-echo;   ;
-echo hi;   ;
-ecit
+warp /
+seek newfolder
+seek newfolder ./home
+cd
+warp
+ls
+warp
+ls
 exit
-echo hi;   ;
-clear
+warp /
+warp
+ls
 exit
+warp /
+warp 
+ls

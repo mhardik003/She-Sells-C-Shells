@@ -9,7 +9,6 @@
 #define MAX_HISTORY_LENGTH 15
 #define TEMP_BG_OUTPUT_FILE "/tmp/bg_output_all"
 
-
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -25,6 +24,5 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
-
 
 #endif

@@ -4,13 +4,10 @@
 #define MAX_LEN 1024
 #define LEN_PWD 1024
 
-
 #define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
-
 
 // headers.h
 void initialize_bgNames();
-
 
 // init.c
 void find_os(int *is_Linux, int *is_Windows);
@@ -18,9 +15,9 @@ void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Window
 void get_pwd(char *pwd_name);
 
 //  main.c
-void handler(int sig);
 void init_shell();
 void exit_shell();
+void handler(int sig);
 
 // prompt.c
 void replaceSubstring(char *str, const char *old, const char *new_str);
@@ -29,6 +26,7 @@ void print_prompt();
 
 // background.c
 void check_bg_processes();
+void displayOutputAndCleanup();
 
 // input_handler.c
 int findWord(char *word, char *line);
@@ -49,10 +47,8 @@ void change_directory(char *path);
 void warp(char *args[], int num_args);
 
 // peek.c
-void color_print_name(const char *name, const char *filepath);
 char *get_path(char *path);
 int is_directory(const char *path);
-int is_executable(const char *path);
 void list_directory(const char *path, int show_all, int long_format);
 void peek(char *args[], int num_args);
 
@@ -60,6 +56,7 @@ void peek(char *args[], int num_args);
 void checkHistoryFile();
 char *read_lastLine();
 void addCommandToHistory(char *input);
+char *find_nth_line(int n);
 void execute_pastevent(int command_number);
 void pastevents_purge();
 void pastevents();
@@ -75,6 +72,7 @@ void get_name_without_extension(const char *filename, char *name);
 void seek_recursive(const char *name, const char *search, int file_flag, int dir_flag, int exact_flag, int *count, char *exactMatch);
 void seek(int num_args, char *args[]);
 
+// syscalls.c
 void syscalls(int num_args, char *args[], char *function_name, int is_bg);
 
 #endif // #UTILS_H

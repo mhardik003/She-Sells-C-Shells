@@ -61,6 +61,8 @@ char *get_prev_directory_string(char *path)
 
 void change_directory(char *path)
 {
+
+
     if (strcmp(path, ".") == 0)
     {
         // DO NOTHING
@@ -210,6 +212,7 @@ void warp(char *args[], int num_args)
     if (num_args == 0)
     {
         // Go to home directory
+        chdir(HOME_DIR);
         strcpy(PREV_PWD, CURR_PWD);
         strcpy(CURR_PWD, HOME_DIR);
     }

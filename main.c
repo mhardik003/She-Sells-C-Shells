@@ -15,8 +15,8 @@ void init_shell()
     find_os(&isLinuxBool, &isWindowsBool);
     get_user_and_sys_name(USER_NAME, SYSTEM_NAME, isLinuxBool, isWindowsBool);
     initialize_bgNames();
-        // check if history file exists
-        checkHistoryFile();
+    // check if history file exists
+    checkHistoryFile();
 }
 
 void exit_shell()
