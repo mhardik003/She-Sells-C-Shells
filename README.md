@@ -1,5 +1,15 @@
-# Description
-Bash shell implemented in C with the following functionlaties
+# C - Shell
+
+Bash shell implemented in C to mimic bash in Linux. Feel free to suggest any changes/raise issues, if you find any.
+
+For more details, refer to the [Assignment PDF ](Assignment.pdf)
+
+<br>
+
+
+## Functionalities
+
+
 * Displays the current user and hostname of the system
 
 
@@ -51,16 +61,16 @@ Bash shell implemented in C with the following functionlaties
 
 <br>
 
----
+
 
 ## Assumptions
 
 - None 
-- If doubtful, I have tried to mimic the functionality of bash shell
+- If doubtful, I have tried to mimic the functionality of bash shell as closely as possible
 
 <Br>
 
----
+
 ## Program Flow
 
 * The [main.c](main.c) file is the main file which contains 
@@ -93,9 +103,7 @@ Bash shell implemented in C with the following functionlaties
     * Each function has its own file and the functions are called from the [function_handler.c](function_handler.c) file
 
 
-<br>
 
----
 
 <Br>
 
