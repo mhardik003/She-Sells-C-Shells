@@ -5,6 +5,7 @@ void checkHistoryFile()
     /*
     Check if the .history.txt file exists in the home directory
     */
+
     FILE *file = fopen(HISTORY_FILE, "r");
 
     if (file == NULL)
@@ -29,7 +30,6 @@ void checkHistoryFile()
 
 char *read_lastLine()
 {
-
     /*
         Read the last line of the .history.txt file and return it
     */
@@ -158,6 +158,10 @@ void addCommandToHistory(char *input)
 
 char *find_nth_line(int n)
 {
+    /*
+
+    */
+
     checkHistoryFile();
 
     FILE *file = fopen(HISTORY_FILE, "r");
@@ -209,6 +213,10 @@ char *find_nth_line(int n)
 void execute_pastevent(int command_number)
 {
 
+    /*
+        Driver code to execute the nth command in the history
+    */
+
     input_handler(find_nth_line(command_number));
 
     // return line;
@@ -216,25 +224,32 @@ void execute_pastevent(int command_number)
 
 void pastevents_purge()
 {
-    checkHistoryFile();
+    /*
+       Function to delete the contents of the .history.txt file
+    */
 
-    // delete the contents of the .history.txt file
+    checkHistoryFile();
     // printf("Clearing the history\n");
+
     FILE *fp = fopen(HISTORY_FILE, "w");
     fclose(fp);
 }
 
 void pastevents()
 {
-    checkHistoryFile();
 
-    // read the contents of the .history.txt file and print them on the screen
+    /*
+        Display the contents of the .history.txt file and print them on the screen
+    */
+
+    checkHistoryFile();
 
     char buffer[256]; // Buffer to store each line
 
     // Open the file for reading
     FILE *file;
     file = fopen(HISTORY_FILE, "r");
+
     if (file == NULL)
     {
         perror("Error opening file");
@@ -254,6 +269,10 @@ void pastevents()
 
 void pastevents_driver(int arg_count, char *args[])
 {
+    /*
+        Driver code for the pastevents function
+    */
+
     if (arg_count == 0)
     {
         pastevents();

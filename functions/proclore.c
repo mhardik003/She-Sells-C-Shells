@@ -1,15 +1,14 @@
 #include "../headers.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
 #define BUF_SIZE 1024
 #define PATH_SIZE 4096
 
 void print_virtualMemUsage(int pid)
 {
+    /*
+        Function to find and print the virtual memory usage of a process
+    */
+
     char path[PATH_SIZE];
     char buf[BUF_SIZE];
     FILE *f;
@@ -41,6 +40,10 @@ void print_virtualMemUsage(int pid)
 
 void print_Process_info(int pid)
 {
+
+    /*
+        Function to print the process info of a process
+    */
 
     char buf[BUF_SIZE];
     char path[PATH_SIZE];
@@ -113,6 +116,10 @@ void print_Process_info(int pid)
 
 void proclore_driver(int argc, char *argv[])
 {
+    /*
+        Driver code for the proclore function
+    */
+
     pid_t pid;
 
     if (argc < 1)

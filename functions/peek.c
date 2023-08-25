@@ -2,6 +2,9 @@
 
 char *get_path(char *path)
 {
+    /*
+    Return the absolute path of the directory to be changed to
+    */
 
     if (strcmp(path, ".") == 0)
     {
@@ -64,6 +67,10 @@ int compare(const void *a, const void *b)
 
 int is_directory(const char *path)
 {
+    /*
+    Return 1 if the path is a directory, 0 otherwise
+    */
+
     struct stat st;
     if (stat(path, &st) == 0)
     {
@@ -74,6 +81,10 @@ int is_directory(const char *path)
 
 void list_directory(const char *path, int show_all, int long_format)
 {
+    /*
+    List the contents of the directory specified by path
+    */
+
     DIR *d;
     struct dirent *dir;
     struct stat file_stat;
@@ -194,14 +205,7 @@ void peek(char *args[], int num_args)
     char *path = (char *)malloc(1024 * sizeof(char));
     strcpy(path, CURR_PWD);
 
-    // print the arguments
-    // for (int i = 0; i < num_args; i++)
-    // {
-    //     printf("%s\n", args[i]);
-    // }
-
-    // printf("Number of args: %d\n", num_args);
-
+    // find the path and the flags
     for (int i = 0; i < num_args; i++)
     {
         // printf("i : %d", i);

@@ -2,6 +2,10 @@
 
 int has_read_permissions(char *path)
 {
+    /*
+        Function to check if the file has read permissions or not
+    */
+
     struct stat st;
     stat(path, &st);
     return (st.st_mode & S_IRUSR);
@@ -9,6 +13,11 @@ int has_read_permissions(char *path)
 
 char *checkSlashes(char *path)
 {
+
+    /*
+        Function to check if the path has forward slashes at the beginning
+    */
+
     int len = strlen(path);
     int temp_loc = 0;
     for (int i = 0; i < len; i++)
@@ -32,6 +41,10 @@ char *checkSlashes(char *path)
 
 int isValidDirectory(char *path)
 {
+    /*
+        Function to check if the directory is valid or not
+    */
+
     strcpy(path, checkSlashes(path));
     struct stat path_stat;
     stat(path, &path_stat);
@@ -40,13 +53,17 @@ int isValidDirectory(char *path)
 
 char *get_prev_directory_string(char *path)
 {
+    /*
+        Function to get the previous directory string
+    */
+
     char *last_slash = strrchr(path, '/');
-    // printf(" PATH : '%s'\n", path);
+
     if (last_slash)
     {
         if (strcmp(path, "/") != 0)
         {
-            // printf("last slash : '%s'\n", last_slash);
+
             *last_slash = '\0';
         }
         strcat(path, "/");
@@ -62,6 +79,9 @@ char *get_prev_directory_string(char *path)
 void change_directory(char *path)
 {
 
+    /*
+        Function to change the directory
+    */
 
     if (strcmp(path, ".") == 0)
     {
@@ -205,9 +225,9 @@ void change_directory(char *path)
 
 void warp(char *args[], int num_args)
 {
-
-    // printf("entering the warp function\n");
-    // printf("number of args : %d",num_args );
+    /*
+        Function to change the directory
+    */
 
     if (num_args == 0)
     {

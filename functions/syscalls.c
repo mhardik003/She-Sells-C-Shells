@@ -2,6 +2,10 @@
 
 void syscalls(int num_args, char *args[], char *function_name, int is_bg)
 {
+    /*
+        Function to handle the system calls
+    */
+
     for (int i = num_args; i > 0; i--)
     {
         args[i] = args[i - 1];

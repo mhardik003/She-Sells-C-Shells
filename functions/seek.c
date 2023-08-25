@@ -2,6 +2,12 @@
 
 void get_name_without_extension(const char *filename, char *name)
 {
+    /*
+    Return the name of the file without the extension
+    */
+
+    // Since we have to check for the file names without the extension
+
     strcpy(name, filename);
     char *dot = strrchr(name, '.');
     if (dot)
@@ -12,6 +18,10 @@ void get_name_without_extension(const char *filename, char *name)
 
 void seek_recursive(const char *name, const char *search, int file_flag, int dir_flag, int exact_flag, int *count, char *exactMatch)
 {
+    /*
+        Recursive function to search for the file in the directory
+    */
+
     DIR *dir;
     struct dirent *entry;
     char *name_without_extension = (char *)malloc(1024 * sizeof(char));
@@ -77,6 +87,10 @@ void seek_recursive(const char *name, const char *search, int file_flag, int dir
 
 void seek(int num_args, char *args[])
 {
+    /*
+        Function to search for the file in the directory
+    */
+
     int file_bool = 0;
     int dir_bool = 0;
     int file_flag = 1;
