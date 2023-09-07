@@ -86,6 +86,7 @@ void execute_command(char *input, int is_background)
     char *temp = (char *)malloc(length_input * sizeof(char)); // to store the input temporarily
     strcpy(temp, input);
 
+
     // check if the input contains some alphanumeric values
     int isEmpty = 1;
     for (int i = 0; i < strlen(input); i++)
@@ -95,6 +96,14 @@ void execute_command(char *input, int is_background)
     }
     if (isEmpty)
         return;
+
+
+    // check if the input contains the '<' or '>' or '>>' characters
+    if (strchr(input, '<') || strchr(input, '>') || strchr(input, '|'))
+    {
+        redirection(input);
+        return;
+    }
 
     // getting all the arguements for the command
     int num_args = 0;

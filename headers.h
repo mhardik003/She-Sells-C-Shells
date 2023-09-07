@@ -19,6 +19,9 @@
 #include <ctype.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+
 
 #include <dirent.h> // for ls -al
 #include <time.h>

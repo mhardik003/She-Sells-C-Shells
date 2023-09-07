@@ -1,16 +1,16 @@
-warp /
-seek newfolder
-seek newfolder ./home
-cd
-warp
-ls
-warp
-ls
+iMan sleep
 exit
-warp /
-warp
-ls
+iMan sleep
 exit
-warp /
-warp 
-ls
+iMan sleep
+clear
+iMan sleep
+clear
+iMan sleep
+exit
+iMan sleep
+iMan access
+exit
+iMan access
+iMan acces
+iMan access

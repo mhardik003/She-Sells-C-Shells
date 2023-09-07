@@ -4,6 +4,10 @@
 #define MAX_LEN 1024
 #define LEN_PWD 1024
 
+#define HOST "man.he.net"
+#define PORT 80
+#define BUFFER_SIZE 4096
+
 #define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
 
 // headers.h
@@ -74,5 +78,15 @@ void seek(int num_args, char *args[]);
 
 // syscalls.c
 void syscalls(int num_args, char *args[], char *function_name, int is_bg);
+
+
+// redirection.c
+void execute_command_redirection(char *args[], char *input_file, char *output_file, int append_mode);
+void redirection(char *input);
+
+
+//iMan.c
+void fetch_iMan_page(int arg_count, char **args);
+
 
 #endif // #UTILS_H

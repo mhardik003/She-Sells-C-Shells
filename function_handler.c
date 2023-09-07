@@ -28,6 +28,10 @@ void function_handler(char *function_name, char *args[], int num_args, int is_bg
         // printf("hi\n");
         seek(num_args, args);
     }
+    else if (strcmp(function_name, "iMan") == 0)
+    {
+        fetch_iMan_page(num_args, args);
+    }
     else if (strcmp(function_name, "exit") == 0 || strcmp(function_name, "quit") == 0)
     {
         exit_call_bool = 1;
