@@ -1,3 +1,1 @@
-"hello"
-"byby"
-2 a.txt
+Lorem Ipsum

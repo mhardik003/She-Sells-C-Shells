@@ -1,11 +1,12 @@
 #include "headers.h"
 
+
+
 void init_shell()
 {
     /*
         Function to initialize the shell
     */
-    clear();
     get_pwd(HOME_DIR);
     get_pwd(CURR_PWD);
     strcpy(HISTORY_FILE, HOME_DIR);
@@ -17,6 +18,7 @@ void init_shell()
     initialize_bgNames();
     // check if history file exists
     checkHistoryFile();
+    clear();
 }
 
 void exit_shell()
@@ -41,6 +43,31 @@ void handler(int sig)
     }
 }
 
+void sigstp_handler(int sig)
+{
+    /*
+        Function to handle the SIGTSTP (Ctrl+Z) signal
+    */
+    if (sig == SIGTSTP)
+    {
+        printf("\n");
+        print_prompt();
+        fflush(stdout);
+    }
+}
+
+void sigchld_handler(int sig)
+{
+    /*
+        Function to handle the SIGCHLD signal
+    */
+    if (sig == SIGCHLD)
+    {
+        // printf("Child process ended\n");
+        displayOutputAndCleanup();
+    }
+}
+
 int main()
 {
     /*
@@ -48,8 +75,8 @@ int main()
     */
 
     signal(SIGINT, handler);
-    // signal(SIGTSTP, handler);
-    // signal(SIGCHLD, bg_end_handler);
+    signal(SIGTSTP, sigstp_handler);
+    signal(SIGCHLD, sigchld_handler);
 
     init_shell();
     while (1)
@@ -76,6 +103,7 @@ int main()
         check_bg_processes();
 
         // handle the input
+        // printf("Input is '%s'\n", input);
         input_handler(input);
 
         // exit_call_bool is set to 1 in the function handler if the input is exit (along with some other input)

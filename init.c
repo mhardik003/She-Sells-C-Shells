@@ -1,5 +1,13 @@
 #include "headers.h"
 
+
+void clear()
+{
+    // function_handler("clear", NULL, 0, 0);
+    // printf("\033[H\033[J");
+    input_handler("clear");
+}
+
 void find_os(int *is_Linux, int *is_Windows)
 {
     /*

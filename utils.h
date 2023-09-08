@@ -6,9 +6,9 @@
 
 #define HOST "man.he.net"
 #define PORT 80
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 40960
 
-#define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
+
 
 // headers.h
 void initialize_bgNames();
@@ -17,6 +17,7 @@ void initialize_bgNames();
 void find_os(int *is_Linux, int *is_Windows);
 void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows);
 void get_pwd(char *pwd_name);
+void clear();
 
 //  main.c
 void init_shell();
@@ -87,6 +88,9 @@ void redirection(char *input);
 
 //iMan.c
 void fetch_iMan_page(int arg_count, char **args);
+
+// pipe.c
+void pipe_handler(char *cmd);
 
 
 #endif // #UTILS_H

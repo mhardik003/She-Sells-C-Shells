@@ -97,6 +97,11 @@ void execute_command(char *input, int is_background)
     if (isEmpty)
         return;
 
+    if (strchr(input, '|'))
+    {
+        pipe_handler(input);
+        return;
+    }
 
     // check if the input contains the '<' or '>' or '>>' characters
     if (strchr(input, '<') || strchr(input, '>') || strchr(input, '|'))
@@ -108,6 +113,8 @@ void execute_command(char *input, int is_background)
     // getting all the arguements for the command
     int num_args = 0;
     token = strtok_r(temp, " \t", &saveptr);
+
+    
     while (token)
     {
         args[num_args] = token;

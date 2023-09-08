@@ -1,96 +1,123 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <netdb.h>
-#include <arpa/inet.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 
-#define HOST "man.he.net"
-#define PORT 80
-#define BUFFER_SIZE 4096
+// Function to execute a single command
+void execute_command(char *command, int input_fd, int output_fd) {
+    char *args[256];
+    char *token = strtok(command, " ");
+    int i = 0;
 
-void fetch_man_page(const char *command_name)
-{
-    struct addrinfo hints, *res;
-    int sockfd;
-    char buffer[BUFFER_SIZE];
-    int bytes_received;
+    while (token) {
+        args[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    args[i] = NULL;
 
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC; // Use IPv4 or IPv6
-    hints.ai_socktype = SOCK_STREAM;
+    // Fork and execute the command
+    pid_t pid = fork();
 
-    // DNS resolution
-    if (getaddrinfo(HOST, "http", &hints, &res) != 0)
-    {
-        perror("Error resolving DNS");
-        exit(EXIT_FAILURE);
+    if (pid < 0) {
+        perror("fork");
+        exit(1);
     }
 
-    // Open a TCP socket
-    sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-    if (sockfd == -1)
-    {
-        perror("Error creating socket");
-        exit(EXIT_FAILURE);
-    }
+    if (pid == 0) {
+        if (input_fd != STDIN_FILENO) {
+            dup2(input_fd, STDIN_FILENO);
+            close(input_fd);
+        }
+        if (output_fd != STDOUT_FILENO) {
+            dup2(output_fd, STDOUT_FILENO);
+            close(output_fd);
+        }
 
-    // Connect to the server
-    if (connect(sockfd, res->ai_addr, res->ai_addrlen) != 0)
-    {
-        perror("Error connecting to server");
-        exit(EXIT_FAILURE);
+        execvp(args[0], args);
+        perror("execvp");
+        exit(1);
+    } else {
+        wait(NULL);
     }
-
-    // Send GET request
-    snprintf(buffer, sizeof(buffer),
-             "GET /?topic=%s&section=all HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n",
-             command_name, HOST);
-
-    if (send(sockfd, buffer, strlen(buffer), 0) == -1)
-    {
-        perror("Error sending GET request");
-        exit(EXIT_FAILURE);
-    }
-
-    // Read the body of the website
-    while ((bytes_received = recv(sockfd, buffer, sizeof(buffer) - 1, 0)) > 0)
-    {
-        buffer[bytes_received] = '\0';
-        // TODO: Properly parse the HTML and extract the relevant sections.
-    }
-    char *end;
-    end = strstr(buffer, "AUTHOR");
-    if (end == NULL)
-    {
-        printf("Connection Error : Please try again \n");
-    }
-    else
-    {
-        *end = '\0';
-
-        printf("%s", buffer);
-    }
-    // Handle the situation when the man page is not found
-    if (strstr(buffer, "<title>404 Not Found</title>") != NULL)
-    {
-        printf("ERROR\n\tNo such command\n");
-    }
-
-    // Close socket
-    close(sockfd);
-    freeaddrinfo(res);
 }
 
-int main(int argc, char *argv[])
-{
-    if (argc != 2)
-    {
-        fprintf(stderr, "Usage: %s <command_name>\n", argv[0]);
-        return EXIT_FAILURE;
+// Function to parse and execute a pipelined command
+void execute_pipeline(char *command) {
+    char *commands[256];
+    char *token = strtok(command, "|");
+    int i = 0, input_fd = STDIN_FILENO, output_fd, fd[2];
+
+    while (token) {
+        commands[i++] = token;
+        token = strtok(NULL, "|");
     }
 
-    fetch_man_page(argv[1]);
+    for (int j = 0; j < i; ++j) {
+        // If it's the last command, set output to STDOUT
+        if (j == i - 1) {
+            output_fd = STDOUT_FILENO;
+        } else {
+            // Otherwise create a pipe
+            if (pipe(fd) < 0) {
+                perror("pipe");
+                exit(1);
+            }
+            output_fd = fd[1];
+        }
 
-    return EXIT_SUCCESS;
+        // Check for I/O redirection
+        char *input_file = strstr(commands[j], "<");
+        char *output_file = strstr(commands[j], ">");
+        
+        if (input_file) {
+            *input_file = '\0';
+            input_file++;
+            input_file = strtok(input_file, " \t\n");
+            input_fd = open(input_file, O_RDONLY);
+            if (input_fd < 0) {
+                perror("open");
+                exit(1);
+            }
+        }
+
+        if (output_file) {
+            *output_file = '\0';
+            output_file++;
+            output_file = strtok(output_file, " \t\n");
+            output_fd = open(output_file, O_WRONLY | O_CREAT, 0644);
+            if (output_fd < 0) {
+                perror("open");
+                exit(1);
+            }
+        }
+
+        execute_command(commands[j], input_fd, output_fd);
+
+        // Close output and make the read end of the pipe the new input
+        if (j != i - 1) {
+            close(fd[1]);
+            input_fd = fd[0];
+        }
+    }
+}
+
+int main() {
+    char command[1024];
+
+    while (1) {
+        printf("<JohnDoe@SYS:~> ");
+        fgets(command, sizeof(command), stdin);
+        command[strlen(command) - 1] = '\0'; // Remove the trailing newline
+
+        if (strcmp(command, "exit") == 0) {
+            break;
+        }
+
+        execute_pipeline(command);
+    }
+
+    return 0;
 }

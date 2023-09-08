@@ -1,16 +1,16 @@
-iMan sleep
+echo  "fde edcedc"
 exit
-iMan sleep
-exit
-iMan sleep
 clear
-iMan sleep
+echo "lOREME CVEFDE"
+exut
+exit
 clear
-iMan sleep
+echo  "cecec cfec"
 exit
-iMan sleep
-iMan access
+clear
+echo "Lorem ec"\
+echo "Lorem dc"
 exit
-iMan access
-iMan acces
-iMan access
+clear
+echo "lorem upsum"
+clear
