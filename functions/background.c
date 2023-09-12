@@ -40,10 +40,12 @@ void check_bg_processes()
             if (WIFEXITED(status))
             {
                 printf("'%s' exited normally (%d) \n", backgroundProcessNames[i], backgroundProcesses[i]);
+                remove_process(backgroundProcesses[i]);
             }
             else if (WIFSIGNALED(status))
             {
                 printf("'%s' exited abnormally (%d)\n", backgroundProcessNames[i], backgroundProcesses[i]);
+                mark_process_stopped(backgroundProcesses[i]);
             }
 
             // Shift the array to remove the completed PID

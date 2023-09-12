@@ -6,6 +6,8 @@
 
 #define HOST "man.he.net"
 #define PORT 80
+#include <sys/types.h>
+#include "headers.h"
 #define BUFFER_SIZE 40960
 
 
@@ -91,6 +93,33 @@ void fetch_iMan_page(int arg_count, char **args);
 
 // pipe.c
 void pipe_handler(char *cmd);
+
+// neonate.c
+int get_latest_pid();
+void handle_neonate_command(int time_arg);
+void neonate(int num_args, char *args[]);
+
+// activities.c
+void add_process(const char *command, pid_t pid);
+void remove_process(pid_t pid);
+void mark_process_stopped(pid_t pid);
+void display_activities();
+
+
+// signals.c
+void cleanup_and_exit();
+void handle_sigint(int sig);
+void handle_sigz(int sig);
+void setup_signal_handlers();
+void ping_func(int num_args, char *args[]);
+// Process *find_process(pid_t pid);
+
+
+// fg_bg.c
+void fg_command(int num_args, char *args[]);
+void bg_command(int num_args, char *args[]);
+
+
 
 
 #endif // #UTILS_H

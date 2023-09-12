@@ -1,7 +1,5 @@
 #include "headers.h"
 
-
-
 void init_shell()
 {
     /*
@@ -38,7 +36,7 @@ void handler(int sig)
     if (sig == SIGINT)
     {
         printf("\n");
-        print_prompt();
+        // print_prompt();
         fflush(stdout);
     }
 }
@@ -73,10 +71,7 @@ int main()
     /*
         Main function
     */
-
-    signal(SIGINT, handler);
-    signal(SIGTSTP, sigstp_handler);
-    signal(SIGCHLD, sigchld_handler);
+    setup_signal_handlers();
 
     init_shell();
     while (1)
@@ -86,7 +81,12 @@ int main()
 
         // take input
         char input[4096];
-        fgets(input, 4096, stdin);
+        if (fgets(input, 4096, stdin) == NULL)
+        {
+            printf("\n");
+            break;
+        }
+
         size_t len = strlen(input);
 
         // remove the trailing newline character
@@ -109,10 +109,10 @@ int main()
         // exit_call_bool is set to 1 in the function handler if the input is exit (along with some other input)
         if (exit_call_bool)
         {
-            printf("By!");
             break;
         }
     }
+    printf("By!");
     exit_shell();
 
     return 0;

@@ -62,7 +62,7 @@ void fetch_iMan_page(int num_args, char **args)
 
     // Send GET request
     snprintf(buffer, sizeof(buffer),
-             "GET /man1/%s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n",
+             "GET /?topic=%s&section=all HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n",
              command_name, HOST);
 
     if (send(sockfd, buffer, strlen(buffer), 0) == -1)

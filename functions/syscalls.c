@@ -45,6 +45,7 @@ void syscalls(int num_args, char *args[], char *function_name, int is_bg)
 
     else
     {
+        add_process(function_name, pid);
         if (is_bg)
         {
             printf("[%d]\n", pid);
@@ -54,8 +55,16 @@ void syscalls(int num_args, char *args[], char *function_name, int is_bg)
         }
         else
         {
+            foreground_pid = pid;
             int status;
             waitpid(pid, &status, WUNTRACED);
+            if (WIFSTOPPED(status))
+            {
+                add_process(args[0], pid);
+                mark_process_stopped(pid);
+            }
+            foreground_pid = -1;
+            remove_process(pid);
             time(&end);
             prevElapsedTime = (int)difftime(end, start);
         }

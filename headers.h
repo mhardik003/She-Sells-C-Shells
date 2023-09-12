@@ -22,6 +22,10 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
+#include <termios.h> // for neonate
+
+#include <time.h>
+
 
 #include <dirent.h> // for ls -al
 #include <time.h>
