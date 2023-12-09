@@ -48,7 +48,7 @@ void fg_command(int num_args, char *args[])
 
 void bg_command(int num_args, char *args[])
 {
-    if (num_args >= 2)
+    if (num_args > 1 || num_args == 0)
     {
         printf("Usage: bg <pid>\n");
         return;

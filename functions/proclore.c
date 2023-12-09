@@ -17,7 +17,7 @@ void print_virtualMemUsage(int pid)
     f = fopen(path, "r");
     if (!f)
     {
-        perror("Failed to open process status");
+        printf("Failed to open process status");
         return;
     }
     long int vm_kb = 0; // Initialize virtual memory size in KB
@@ -54,12 +54,12 @@ void print_Process_info(int pid)
     f = fopen(path, "r");
     if (!f)
     {
-        perror("Failed to open process stat");
+        printf("Failed to open process stat");
         return;
     }
     if (!fgets(buf, sizeof(buf), f))
     {
-        perror("Failed to read process stat");
+        printf("Failed to read process stat");
         fclose(f);
         return;
     }
@@ -105,7 +105,7 @@ void print_Process_info(int pid)
     ssize_t len = readlink(path, buf, sizeof(buf) - 1);
     if (len == -1)
     {
-        perror("Failed to get executable path");
+        printf("Failed to get executable path");
         return;
     }
     buf[len] = '\0';

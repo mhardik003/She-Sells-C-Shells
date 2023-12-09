@@ -1,4 +1,9 @@
 #include "headers.h"
+#include <setjmp.h>
+#define TRY do { jmp_buf buf_state; if ( !setjmp(buf_state)) {
+#define CATCH } else {
+#define ENDTRY }} while(0)
+#define THROW longjmp(buf_state, 1)
 
 void init_shell()
 {
@@ -104,8 +109,15 @@ int main()
 
         // handle the input
         // printf("Input is '%s'\n", input);
-        input_handler(input);
-
+        TRY
+        {
+            input_handler(input);
+        }
+        CATCH
+        {
+            printf(" SOME ERROR \n");
+        }
+        ENDTRY;
         // exit_call_bool is set to 1 in the function handler if the input is exit (along with some other input)
         if (exit_call_bool)
         {

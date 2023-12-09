@@ -170,7 +170,7 @@ void seek(int num_args, char *args[])
 
         if (S_ISDIR(st.st_mode))
         {
-            printf("\033[1;34m%s/\033[0m\n", exactMatch);
+            // printf("\033[1;34m%s/\033[0m\n", exactMatch);
             change_directory(exactMatch);
         }
         else

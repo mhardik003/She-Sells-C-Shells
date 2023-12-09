@@ -1,9 +1,8 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/76mHqLr5)
 # C - Shell
 
 Bash shell implemented in C to mimic bash in Linux. Feel free to suggest any changes/raise issues, if you find any.
 
-For more details, refer to the [Assignment PDF ](Assignment.pdf)
+For more details, refer to the [Specifications PDF ](./Specifications.pdf)
 
 <br>
 
@@ -69,7 +68,7 @@ For more details, refer to the [Assignment PDF ](Assignment.pdf)
 - None 
 - If doubtful, I have tried to mimic the functionality of bash shell as closely as possible
 
-<Br>
+<br>
 
 
 ## Program Flow
@@ -104,10 +103,5 @@ For more details, refer to the [Assignment PDF ](Assignment.pdf)
     * Each function has its own file and the functions are called from the [function_handler.c](function_handler.c) file
 
 
+<br>
 
-
-<Br>
-
-### **Disclaimer**
-
-AI models like ChatGPT and Co-Pilot have been used to code the shell, but I have the full understading of how the shell works and can explain the code in detail.

@@ -33,11 +33,14 @@ void handle_sigint(int sig)
 
 void handle_sigz(int sig)
 {
+
     if (foreground_pid != -1)
     {
+        // printf("HELLLOOOOOOOOO\n");
         kill(foreground_pid, SIGSTOP);
         printf("Foreground process stopped with pid %d\n", foreground_pid);
-        mark_process_stopped(foreground_pid);
+
+        // mark_process_stopped(foreground_pid);
         foreground_pid = -1;
     }
 }
@@ -56,7 +59,9 @@ void setup_signal_handlers()
         perror("sigaction");
         exit(1);
     }
-
+    
+    signal(SIGTSTP, SIG_DFL);
+    signal(SIGCHLD, SIG_IGN);
     sa_z.sa_handler = handle_sigz;
     sa_z.sa_flags = SA_RESTART;
     if (sigaction(SIGTSTP, &sa_z, NULL) == -1)
@@ -77,13 +82,19 @@ void ping_func(int num_args, char *args[])
 
     if (kill(pid, 0) == -1)
     {
-        perror("No such process found");
+        printf("No such process found\n");
     }
     else
     {
         kill(pid, signal_num);
         if (signal_num == 9)
             remove_process(pid);
+
+        if (signal_num == 18)
+            mark_process_stopped(pid);        
+
         printf("Sent signal %d to process with pid %d\n", signal_num, pid);
+
+    
     }
 }

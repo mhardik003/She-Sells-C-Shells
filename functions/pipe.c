@@ -1,14 +1,47 @@
 #include "../headers.h"
 
+int contains_letters (char *str)
+{
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (!isalpha(str[i]))
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 void pipe_handler(char *cmd)
 {
     char *commands[100];
     char *command;
     int n = 0, p[2], fd_in = 0;
 
-    command = strtok(cmd, "|");
-    while (command)
+    // remove spaces from the beginning
+    while (*cmd == ' ')
     {
+        cmd++;
+    }
+
+    // if the first character is a pipe, then there is an error
+    if (*cmd == '|')
+    {
+        printf("Error: Invalid use of pipe\n");
+        return;
+    }
+
+    // check if the last character is a pipe
+    if (cmd[strlen(cmd) - 1] == '|')
+    {
+        printf("Error: Invalid use of pipe\n");
+        return;
+    }
+
+    command = strtok(cmd, "|");
+
+    while (command)
+    {        
         commands[n] = command;
         n++;
         command = strtok(NULL, "|");

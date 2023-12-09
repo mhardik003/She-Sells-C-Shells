@@ -19,12 +19,19 @@ void disable_raw_mode()
 // Enable raw mode for terminal
 void enable_raw_mode()
 {
+
     if (tcgetattr(STDIN_FILENO, &orig_termios) == -1)
         die("tcgetattr");
     atexit(disable_raw_mode);
 
     struct termios raw = orig_termios;
     raw.c_lflag &= ~(ECHO | ICANON);
+
+    
+    // raw.c_cflag &= ~(CSIZE | PARENB);
+    // raw.c_oflag &= ~(OPOST);
+    // raw.c_iflag &= ~(IXON | ICRNL);
+
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
         die("tcsetattr");
 }
@@ -100,6 +107,10 @@ void handle_neonate_command(int time_arg)
             {
                 break;
             }
+            else
+            {
+                ;
+            }
         }
     }
 
@@ -115,16 +126,21 @@ void neonate(int num_args, char *args[])
         return;
     }
 
-    int time_arg = atoi(args[1]);
-    if (time_arg >= 0)
+    if (strchr(args[1], '-') == NULL && strchr(args[1], '.') == NULL)
     {
-        handle_neonate_command(time_arg);
+
+        int time_arg = atoi(args[1]);
+        if (time_arg >= 0)
+        {
+            handle_neonate_command(time_arg);
+        }
     }
+
     else
     {
         printf("neonate: Invalid time argument\n");
         return;
     }
 
-    return ;
+    return;
 }

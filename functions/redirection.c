@@ -11,7 +11,7 @@ void execute_command_redirection(char **args, char *input_file, char *output_fil
         if (input_file) {
             int in = open(input_file, O_RDONLY);
             if (in < 0) {
-                perror("No such input file found!");
+                printf("No such input file found!");
                 exit(EXIT_FAILURE);
             }
             dup2(in, STDIN_FILENO);
@@ -25,7 +25,7 @@ void execute_command_redirection(char **args, char *input_file, char *output_fil
                 out = open(output_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
             }
             if (out < 0) {
-                perror("Error opening output file");
+                printf("Error opening output file");
                 exit(EXIT_FAILURE);
             }
             dup2(out, STDOUT_FILENO);
