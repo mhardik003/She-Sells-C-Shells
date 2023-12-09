@@ -209,7 +209,7 @@ void peek(char *args[], int num_args)
     for (int i = 0; i < num_args; i++)
     {
         // printf("i : %d", i);
-        if (args[i][0] != '-')
+        if (args[i][0] != '-' || (args[i][0] == '-' && args[i][1] == '\0'))
         {
             char *temp_path = (char *)malloc(1024 * sizeof(char));
             strcpy(path, get_path(args[i]));

@@ -82,7 +82,7 @@ void addCommandToHistory(char *input)
         FILE *file = fopen(fileName, "r");
         if (file == NULL)
         {
-            perror("Error opening input file");
+            printf("Error opening input file");
             return;
         }
 
@@ -113,7 +113,7 @@ void addCommandToHistory(char *input)
 
             if (file == NULL || tempFile == NULL)
             {
-                perror("Error opening files");
+                printf("Error opening files");
                 return;
             }
 
@@ -167,7 +167,7 @@ char *find_nth_line(int n)
     FILE *file = fopen(HISTORY_FILE, "r");
     if (file == NULL)
     {
-        perror("Error opening file");
+        printf("Error opening file");
         return "";
     }
 
@@ -252,7 +252,7 @@ void pastevents()
 
     if (file == NULL)
     {
-        perror("Error opening file");
+        printf("Error opening file");
         return;
     }
 

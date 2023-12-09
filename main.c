@@ -1,11 +1,15 @@
 #include "headers.h"
+#include <setjmp.h>
+#define TRY do { jmp_buf buf_state; if ( !setjmp(buf_state)) {
+#define CATCH } else {
+#define ENDTRY }} while(0)
+#define THROW longjmp(buf_state, 1)
 
 void init_shell()
 {
     /*
         Function to initialize the shell
     */
-    clear();
     get_pwd(HOME_DIR);
     get_pwd(CURR_PWD);
     strcpy(HISTORY_FILE, HOME_DIR);
@@ -17,6 +21,7 @@ void init_shell()
     initialize_bgNames();
     // check if history file exists
     checkHistoryFile();
+    clear();
 }
 
 void exit_shell()
@@ -36,8 +41,33 @@ void handler(int sig)
     if (sig == SIGINT)
     {
         printf("\n");
+        // print_prompt();
+        fflush(stdout);
+    }
+}
+
+void sigstp_handler(int sig)
+{
+    /*
+        Function to handle the SIGTSTP (Ctrl+Z) signal
+    */
+    if (sig == SIGTSTP)
+    {
+        printf("\n");
         print_prompt();
         fflush(stdout);
+    }
+}
+
+void sigchld_handler(int sig)
+{
+    /*
+        Function to handle the SIGCHLD signal
+    */
+    if (sig == SIGCHLD)
+    {
+        // printf("Child process ended\n");
+        displayOutputAndCleanup();
     }
 }
 
@@ -46,10 +76,7 @@ int main()
     /*
         Main function
     */
-
-    signal(SIGINT, handler);
-    // signal(SIGTSTP, handler);
-    // signal(SIGCHLD, bg_end_handler);
+    setup_signal_handlers();
 
     init_shell();
     while (1)
@@ -59,7 +86,12 @@ int main()
 
         // take input
         char input[4096];
-        fgets(input, 4096, stdin);
+        if (fgets(input, 4096, stdin) == NULL)
+        {
+            printf("\n");
+            break;
+        }
+
         size_t len = strlen(input);
 
         // remove the trailing newline character
@@ -76,15 +108,23 @@ int main()
         check_bg_processes();
 
         // handle the input
-        input_handler(input);
-
+        // printf("Input is '%s'\n", input);
+        TRY
+        {
+            input_handler(input);
+        }
+        CATCH
+        {
+            printf(" SOME ERROR \n");
+        }
+        ENDTRY;
         // exit_call_bool is set to 1 in the function handler if the input is exit (along with some other input)
         if (exit_call_bool)
         {
-            printf("By!");
             break;
         }
     }
+    printf("By!");
     exit_shell();
 
     return 0;

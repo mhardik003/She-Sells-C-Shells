@@ -28,10 +28,37 @@ void function_handler(char *function_name, char *args[], int num_args, int is_bg
         // printf("hi\n");
         seek(num_args, args);
     }
+    else if (strcmp(function_name, "activities") == 0)
+    {
+        display_activities();
+    }
+    else if (strcmp(function_name, "ping") == 0)
+    {
+        ping_func(num_args, args);
+    }
+    else if (strcmp(function_name, "fg") == 0)
+    {
+        fg_command(num_args, args);
+    }
+    else if (strcmp(function_name, "bg") == 0)
+    {
+        bg_command(num_args, args);
+    }
+    else if (strcmp(function_name, "neonate") == 0)
+    {
+        neonate(num_args, args);
+    }
+    else if (strcmp(function_name, "iMan") == 0)
+    {
+        fetch_iMan_page(num_args, args);
+    }
+
     else if (strcmp(function_name, "exit") == 0 || strcmp(function_name, "quit") == 0)
     {
+        cleanup_and_exit();
         exit_call_bool = 1;
     }
+
     else
     {
         // Add the command to args[0] and shift all the other elements to the right

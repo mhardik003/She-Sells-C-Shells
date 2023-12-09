@@ -1,4 +1,4 @@
-.history.txt
-a.out
+*.txt
+*.out
 .vscode
-
+temp*

@@ -4,7 +4,13 @@
 #define MAX_LEN 1024
 #define LEN_PWD 1024
 
-#define clear() printf("\033[2J\033[H"); // Send control codes to clear the screen
+#define HOST "man.he.net"
+#define PORT 80
+#include <sys/types.h>
+#include "headers.h"
+#define BUFFER_SIZE 40960
+
+
 
 // headers.h
 void initialize_bgNames();
@@ -13,6 +19,7 @@ void initialize_bgNames();
 void find_os(int *is_Linux, int *is_Windows);
 void get_user_and_sys_name(char *user, char *system, int is_Linux, int is_Windows);
 void get_pwd(char *pwd_name);
+void clear();
 
 //  main.c
 void init_shell();
@@ -74,5 +81,45 @@ void seek(int num_args, char *args[]);
 
 // syscalls.c
 void syscalls(int num_args, char *args[], char *function_name, int is_bg);
+
+
+// redirection.c
+void execute_command_redirection(char *args[], char *input_file, char *output_file, int append_mode);
+void redirection(char *input);
+
+
+//iMan.c
+void fetch_iMan_page(int arg_count, char **args);
+
+// pipe.c
+void pipe_handler(char *cmd);
+
+// neonate.c
+int get_latest_pid();
+void handle_neonate_command(int time_arg);
+void neonate(int num_args, char *args[]);
+
+// activities.c
+void add_process(const char *command, pid_t pid);
+void remove_process(pid_t pid);
+void mark_process_stopped(pid_t pid);
+void display_activities();
+
+
+// signals.c
+void cleanup_and_exit();
+void handle_sigint(int sig);
+void handle_sigz(int sig);
+void setup_signal_handlers();
+void ping_func(int num_args, char *args[]);
+// Process *find_process(pid_t pid);
+
+
+// fg_bg.c
+void fg_command(int num_args, char *args[]);
+void bg_command(int num_args, char *args[]);
+
+
+
 
 #endif // #UTILS_H

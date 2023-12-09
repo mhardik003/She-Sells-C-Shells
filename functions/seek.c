@@ -100,7 +100,11 @@ void seek(int num_args, char *args[])
     char *target_dir = ".";
     int count = 0;
     char exactMatch[1024] = {0};
-
+    if (num_args == 0)
+    {
+        printf("Invalid number of arguments!\n");
+        return;
+    }
     for (int i = 0; i < num_args; i++)
     {
         if (args[i][0] == '-')
@@ -166,7 +170,7 @@ void seek(int num_args, char *args[])
 
         if (S_ISDIR(st.st_mode))
         {
-            printf("\033[1;34m%s/\033[0m\n", exactMatch);
+            // printf("\033[1;34m%s/\033[0m\n", exactMatch);
             change_directory(exactMatch);
         }
         else
